@@ -37,6 +37,7 @@ PRIVACY_CHOICES = (
 MARKUP_CHOICES = [('bbcode', 'bbcode')]
 try:
     import markdown
+    del markdown
     MARKUP_CHOICES.append(("markdown", "markdown"))
 except ImportError:
     pass
