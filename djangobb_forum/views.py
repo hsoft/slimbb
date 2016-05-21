@@ -31,7 +31,7 @@ from djangobb_forum.models import Category, Forum, Topic, Post, \
     Attachment, PostTracking
 from djangobb_forum.templatetags import forum_extras
 from djangobb_forum.templatetags.forum_extras import forum_moderated_by
-from djangobb_forum.util import build_form, smiles, convert_text_to_html, get_page
+from djangobb_forum.util import build_form, convert_text_to_html, get_page
 
 
 User = get_user_model()
@@ -796,6 +796,4 @@ def post_preview(request):
     data = request.POST.get('data', '')
 
     data = convert_text_to_html(data, markup)
-    if forum_settings.SMILES_SUPPORT:
-        data = smiles(data)
     return render(request, 'djangobb_forum/post_preview.html', {'data': data})

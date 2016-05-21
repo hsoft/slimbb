@@ -1,6 +1,5 @@
 # coding: utf-8
 
-import re
 from django.utils.six.moves import html_parser
 HTMLParser = html_parser.HTMLParser
 try:
@@ -25,10 +24,6 @@ from django.core.paginator import Paginator, EmptyPage, InvalidPage
 from django.contrib.sites.models import Site
 
 from djangobb_forum import settings as forum_settings
-
-
-#compile smiles regexp
-_SMILES = [(re.compile(smile_re), path) for smile_re, path in forum_settings.SMILES]
 
 
 def absolute_url(path):
@@ -143,29 +138,6 @@ def urlize(html):
             raise
         return html
     return urlized_html
-
-def _smile_replacer(data):
-    for smile, path in _SMILES:
-        data = smile.sub(path, data)
-    return data
-
-def smiles(html):
-    """
-    Replace text smiles.
-    """
-    try:
-        parser = ExcludeTagsHTMLFilter(_smile_replacer)
-        parser.feed(html)
-        smiled_html = parser.html
-        parser.close()
-    except HTMLParseError:
-        # HTMLParser from Python <2.7.3 is not robust
-        # see: http://support.djangobb.org/topic/349/
-        if settings.DEBUG:
-            raise
-        return html
-    return smiled_html
-
 
 class AddAttributesHTMLFilter(HTMLFilter):
     """

@@ -17,7 +17,7 @@ from django.utils.translation import ugettext_lazy as _
 import pytz
 
 from djangobb_forum.fields import AutoOneToOneField, ExtendedImageField, JSONField
-from djangobb_forum.util import smiles, convert_text_to_html
+from djangobb_forum.util import convert_text_to_html
 from djangobb_forum import settings as forum_settings
 
 
@@ -215,8 +215,6 @@ class Post(models.Model):
 
     def save(self, *args, **kwargs):
         self.body_html = convert_text_to_html(self.body, self.markup)
-        if forum_settings.SMILES_SUPPORT and self.user.forum_profile.show_smilies:
-            self.body_html = smiles(self.body_html)
         super(Post, self).save(*args, **kwargs)
 
 
@@ -279,7 +277,6 @@ class Profile(models.Model):
     theme = models.CharField(_('Theme'), choices=THEME_CHOICES, max_length=80, default='default')
     show_avatar = models.BooleanField(_('Show avatar'), blank=True, default=True)
     show_signatures = models.BooleanField(_('Show signatures'), blank=True, default=True)
-    show_smilies = models.BooleanField(_('Show smilies'), blank=True, default=True)
     privacy_permission = models.IntegerField(_('Privacy permission'), choices=PRIVACY_CHOICES, default=1)
     auto_subscribe = models.BooleanField(_('Auto subscribe'), help_text=_("Auto subscribe all topics you have created or reply."), blank=True, default=False)
     markup = models.CharField(_('Default markup'), max_length=15, default=forum_settings.DEFAULT_MARKUP, choices=MARKUP_CHOICES)
