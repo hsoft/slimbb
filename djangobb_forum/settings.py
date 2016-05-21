@@ -36,12 +36,6 @@ JQUERY_URL = get('DJANGOBB_JQUERY_URL', '//cdnjs.cloudflare.com/ajax/libs/jquery
 GRAVATAR_SUPPORT = get('DJANGOBB_GRAVATAR_SUPPORT', True)
 GRAVATAR_DEFAULT = get('DJANGOBB_GRAVATAR_DEFAULT', 'identicon')
 
-# PM Extension
-if 'django_messages' not in settings.INSTALLED_APPS:
-    PM_SUPPORT = False
-else:
-    PM_SUPPORT = get('DJANGOBB_PM_SUPPORT', True)
-
 # ATTACHMENT Extension
 ATTACHMENT_SUPPORT = get('DJANGOBB_ATTACHMENT_SUPPORT', True)
 ATTACHMENT_UPLOAD_TO = get('DJANGOBB_ATTACHMENT_UPLOAD_TO', 'djangobb_forum/attachments')
