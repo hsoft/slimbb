@@ -280,13 +280,6 @@ class PostSearchForm(forms.Form):
     show_as = forms.ChoiceField(choices=SHOW_AS_CHOICES, label=_('Show results as'))
 
 
-class MailToForm(forms.Form):
-    subject = forms.CharField(label=_('Subject'),
-                              widget=forms.TextInput(attrs={'size':'75', 'maxlength':'70', 'class':'longinput'}))
-    body = forms.CharField(required=False, label=_('Message'),
-                               widget=forms.Textarea(attrs={'rows':'10', 'cols':'75'}))
-
-
 class ReportForm(forms.ModelForm):
 
     class Meta:

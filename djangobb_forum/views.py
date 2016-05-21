@@ -8,7 +8,6 @@ from django.utils import timezone
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import get_user_model
-from django.contrib.sites.models import Site
 from django.core.cache import cache
 from django.core.exceptions import SuspiciousOperation, PermissionDenied
 from django.core.urlresolvers import reverse
@@ -25,7 +24,7 @@ from haystack.query import SearchQuerySet, SQ
 
 from djangobb_forum import settings as forum_settings
 from djangobb_forum.forms import AddPostForm, EditPostForm, UserSearchForm, \
-    PostSearchForm, MailToForm, EssentialsProfileForm, ReportForm
+    PostSearchForm, EssentialsProfileForm, ReportForm
 from djangobb_forum.models import Category, Forum, Topic, Post, \
     Attachment, PostTracking
 from djangobb_forum.templatetags import forum_extras
@@ -300,34 +299,6 @@ def misc(request):
                     messages.info(request, _("Post reported."))
                     return HttpResponseRedirect(post.get_absolute_url())
                 return render(request, 'djangobb_forum/report.html', {'form':form})
-
-    elif 'submit' in request.POST and 'mail_to' in request.GET:
-        if not forum_settings.USER_TO_USER_EMAIL and not request.user.is_superuser:
-            raise PermissionDenied
-
-        form = MailToForm(request.POST)
-        if form.is_valid():
-            user = get_object_or_404(User, username=request.GET['mail_to'])
-            subject = form.cleaned_data['subject']
-            body = form.cleaned_data['body'] + '\n %s %s [%s]' % (Site.objects.get_current().domain,
-                                                                  request.user.username,
-                                                                  request.user.email)
-            try:
-                user.email_user(subject, body, request.user.email)
-                messages.success(request, _("Email send."))
-            except Exception:
-                messages.error(request, _("Email could not be sent."))
-            return HttpResponseRedirect(reverse('djangobb:index'))
-
-    elif 'mail_to' in request.GET:
-        if not forum_settings.USER_TO_USER_EMAIL and not request.user.is_superuser:
-            raise PermissionDenied
-
-        mailto = get_object_or_404(User, username=request.GET['mail_to'])
-        form = MailToForm()
-        return render(request, 'djangobb_forum/mail_to.html', {'form':form,
-                'mailto': mailto}
-                )
 
 
 def show_forum(request, forum_id):
