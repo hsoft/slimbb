@@ -89,12 +89,6 @@ if (forum_settings.LOFI_SUPPORT):
         url('^topic/(?P<topic_id>\d+)/lofi/$', forum_views.show_topic, {'full':False}, name='lofi_topic'),
     ]
 
-# REPUTATION Extension
-if (forum_settings.REPUTATION_SUPPORT):
-    urlpatterns += [
-        url('^reputation/(?P<username>.*)/$', forum_views.reputation, name='reputation'),
-    ]
-
 # ATTACHMENT Extension
 if (forum_settings.ATTACHMENT_SUPPORT):
     urlpatterns += [

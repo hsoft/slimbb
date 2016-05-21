@@ -261,38 +261,6 @@ class Post(models.Model):
     __str__ = summary
 
 
-@python_2_unicode_compatible
-class Reputation(models.Model):
-    from_user = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='reputations_from', verbose_name=_('From'))
-    to_user = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='reputations_to', verbose_name=_('To'))
-    post = models.ForeignKey(Post, related_name='post', verbose_name=_('Post'))
-    time = models.DateTimeField(_('Time'), auto_now_add=True)
-    sign = models.IntegerField(_('Sign'), choices=SIGN_CHOICES, default=0)
-    reason = models.TextField(_('Reason'), max_length=1000)
-
-    class Meta:
-        verbose_name = _('Reputation')
-        verbose_name_plural = _('Reputations')
-        unique_together = (('from_user', 'post'),)
-
-    def __str__(self):
-        time = timezone.localtime(self.time)
-        return 'T[%d], FU[%d], TU[%d]: %s' % (self.post.id, self.from_user.id, self.to_user.id, str(time))
-
-
-class ProfileManager(models.Manager):
-    use_for_related_fields = True
-    def get_queryset(self):
-        qs = super(ProfileManager, self).get_queryset()
-        if forum_settings.REPUTATION_SUPPORT:
-            qs = qs.extra(select={
-                'reply_total': 'SELECT SUM(sign) FROM djangobb_forum_reputation WHERE to_user_id = djangobb_forum_profile.user_id GROUP BY to_user_id',
-                'reply_count_minus': "SELECT SUM(sign) FROM djangobb_forum_reputation WHERE to_user_id = djangobb_forum_profile.user_id AND sign = '-1' GROUP BY to_user_id",
-                'reply_count_plus': "SELECT SUM(sign) FROM djangobb_forum_reputation WHERE to_user_id = djangobb_forum_profile.user_id AND sign = '1' GROUP BY to_user_id",
-                })
-        return qs
-
-
 class Profile(models.Model):
     user = AutoOneToOneField(settings.AUTH_USER_MODEL, related_name='forum_profile', verbose_name=_('User'))
     status = models.CharField(_('Status'), max_length=30, blank=True)
@@ -316,8 +284,6 @@ class Profile(models.Model):
     auto_subscribe = models.BooleanField(_('Auto subscribe'), help_text=_("Auto subscribe all topics you have created or reply."), blank=True, default=False)
     markup = models.CharField(_('Default markup'), max_length=15, default=forum_settings.DEFAULT_MARKUP, choices=MARKUP_CHOICES)
     post_count = models.IntegerField(_('Post count'), blank=True, default=0)
-
-    objects = ProfileManager()
 
     class Meta:
         verbose_name = _('Profile')

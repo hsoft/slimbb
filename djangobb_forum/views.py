@@ -25,9 +25,9 @@ from haystack.query import SearchQuerySet, SQ
 
 from djangobb_forum import settings as forum_settings
 from djangobb_forum.forms import AddPostForm, EditPostForm, UserSearchForm, \
-    PostSearchForm, ReputationForm, MailToForm, EssentialsProfileForm, \
+    PostSearchForm, MailToForm, EssentialsProfileForm, \
     ReportForm, VotePollForm, PollForm
-from djangobb_forum.models import Category, Forum, Topic, Post, Reputation, \
+from djangobb_forum.models import Category, Forum, Topic, Post, \
     Attachment, PostTracking
 from djangobb_forum.templatetags import forum_extras
 from djangobb_forum.templatetags.forum_extras import forum_moderated_by
@@ -574,50 +574,6 @@ def user(request, username, section='essentials', action=None, template='djangob
             return HttpResponseRedirect(settings.LOGIN_URL + '?next=%s' % request.path)
         return render(request, template, {'profile': user,
                 'topic_count': topic_count,
-               })
-
-
-@login_required
-@transaction.atomic
-def reputation(request, username):
-    user = get_object_or_404(User, username=username)
-    form = build_form(ReputationForm, request, from_user=request.user, to_user=user)
-
-    if 'action' in request.GET:
-        if request.user == user:
-            return HttpResponseForbidden('You can not change the reputation of yourself')
-
-        if 'post_id' in request.GET:
-            post_id = request.GET['post_id']
-            form.fields['post'].initial = post_id
-            if request.GET['action'] == 'plus':
-                form.fields['sign'].initial = 1
-            elif request.GET['action'] == 'minus':
-                form.fields['sign'].initial = -1
-            return render(request, 'djangobb_forum/reputation_form.html', {'form': form})
-        else:
-            raise Http404
-
-    elif request.method == 'POST':
-        if 'del_reputation' in request.POST and request.user.is_superuser:
-            reputation_list = request.POST.getlist('reputation_id')
-            for reputation_id in reputation_list:
-                reputation = get_object_or_404(Reputation, pk=reputation_id)
-                reputation.delete()
-            messages.success(request, _("Reputation deleted."))
-            return HttpResponseRedirect(reverse('djangobb:index'))
-        elif form.is_valid():
-            form.save()
-            post_id = request.POST['post']
-            post = get_object_or_404(Post, id=post_id)
-            messages.success(request, _("Reputation saved."))
-            return HttpResponseRedirect(post.get_absolute_url())
-        else:
-            return render(request, 'djangobb_forum/reputation_form.html', {'form': form})
-    else:
-        reputations = Reputation.objects.filter(to_user__id=user.id).order_by('-time').select_related()
-        return render(request, 'djangobb_forum/reputation.html', {'reputations': reputations,
-                'profile': user.forum_profile,
                })
 
 

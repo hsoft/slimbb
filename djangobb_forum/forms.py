@@ -10,7 +10,7 @@ from django.contrib.auth import get_user_model
 from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
 
-from djangobb_forum.models import Topic, Post, Profile, Reputation, Report, \
+from djangobb_forum.models import Topic, Post, Profile, Report, \
     Attachment, Poll, PollChoice
 from djangobb_forum import settings as forum_settings
 from djangobb_forum.util import convert_text_to_html, set_language
@@ -330,55 +330,6 @@ class PostSearchForm(forms.Form):
     sort_by = forms.ChoiceField(choices=SORT_POST_BY_CHOICES, label=_('Sort by'))
     sort_dir = forms.ChoiceField(choices=SORT_DIR_CHOICES, initial='DESC', label=_('Sort order'))
     show_as = forms.ChoiceField(choices=SHOW_AS_CHOICES, label=_('Show results as'))
-
-
-class ReputationForm(forms.ModelForm):
-
-    class Meta:
-        model = Reputation
-        fields = ['reason', 'post', 'sign']
-
-    def __init__(self, *args, **kwargs):
-        self.from_user = kwargs.pop('from_user', None)
-        self.to_user = kwargs.pop('to_user', None)
-        self.post = kwargs.pop('post', None)
-        self.sign = kwargs.pop('sign', None)
-        super(ReputationForm, self).__init__(*args, **kwargs)
-        self.fields['post'].widget = forms.HiddenInput()
-        self.fields['sign'].widget = forms.HiddenInput()
-        self.fields['reason'].widget = forms.Textarea(attrs={'class':'markup'})
-
-    def clean_to_user(self):
-        name = self.cleaned_data['to_user']
-        try:
-            user = User.objects.get(username=name)
-        except User.DoesNotExist:
-            raise forms.ValidationError(_('User with login %s does not exist') % name)
-        else:
-            return user
-
-    def clean(self):
-        try:
-            Reputation.objects.get(from_user=self.from_user, post=self.cleaned_data['post'])
-        except Reputation.DoesNotExist:
-            pass
-        else:
-            raise forms.ValidationError(_('You already voted for this post'))
-
-        # check if this post really belong to `from_user`
-        if not Post.objects.filter(pk=self.cleaned_data['post'].id, user=self.to_user).exists():
-            raise forms.ValidationError(_('This post does\'t belong to this user'))
-
-        return self.cleaned_data
-
-
-    def save(self, commit=True):
-        reputation = super(ReputationForm, self).save(commit=False)
-        reputation.from_user = self.from_user
-        reputation.to_user = self.to_user
-        if commit:
-            reputation.save()
-        return reputation
 
 
 class MailToForm(forms.Form):
