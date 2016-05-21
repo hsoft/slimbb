@@ -256,7 +256,7 @@ class PersonalityProfileForm(forms.ModelForm):
 class DisplayProfileForm(forms.ModelForm):
     class Meta:
         model = Profile
-        fields = ['theme', 'markup']
+        fields = ['markup']
 
     def __init__(self, *args, **kwargs):
         kwargs.pop('extra_args', {})

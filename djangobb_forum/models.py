@@ -22,11 +22,6 @@ from djangobb_forum import settings as forum_settings
 
 TZ_CHOICES = [(tz_name, tz_name) for tz_name in pytz.common_timezones]
 
-SIGN_CHOICES = (
-    (1, 'PLUS'),
-    (-1, 'MINUS'),
-)
-
 PRIVACY_CHOICES = (
     (0, _('Display your e-mail address.')),
     (1, _('Hide your e-mail address but allow form e-mail.')),
@@ -40,14 +35,6 @@ try:
     MARKUP_CHOICES.append(("markdown", "markdown"))
 except ImportError:
     pass
-
-path = os.path.join(settings.STATIC_ROOT, 'djangobb_forum', 'themes')
-if os.path.exists(path):
-    # fix for collectstatic
-    THEME_CHOICES = [(theme, theme) for theme in os.listdir(path)
-                     if os.path.isdir(os.path.join(path, theme))]
-else:
-    THEME_CHOICES = []
 
 @python_2_unicode_compatible
 class Category(models.Model):
@@ -274,7 +261,6 @@ class Profile(models.Model):
     time_zone = models.CharField(_('Time zone'),max_length=50, choices=TZ_CHOICES, default=settings.TIME_ZONE)
     language = models.CharField(_('Language'), max_length=5, default='', choices=settings.LANGUAGES)
     avatar = ExtendedImageField(_('Avatar'), blank=True, default='', upload_to=forum_settings.AVATARS_UPLOAD_TO, width=forum_settings.AVATAR_WIDTH, height=forum_settings.AVATAR_HEIGHT)
-    theme = models.CharField(_('Theme'), choices=THEME_CHOICES, max_length=80, default='default')
     show_avatar = models.BooleanField(_('Show avatar'), blank=True, default=True)
     show_signatures = models.BooleanField(_('Show signatures'), blank=True, default=True)
     privacy_permission = models.IntegerField(_('Privacy permission'), choices=PRIVACY_CHOICES, default=1)
