@@ -273,43 +273,27 @@
     "pk": 1,
     "model": "djangobb_forum.profile",
     "fields": {
-        "status": "",
         "markup": "bbcode",
         "show_signatures": true,
         "language": "",
         "post_count": 3,
         "privacy_permission": 1,
-        "site": "",
-        "yahoo": "",
-        "aim": "",
-        "msn": "",
         "time_zone": 3.0,
         "user": 1,
-        "signature": "",
-        "icq": "",
-        "jabber": "",
-        "location": ""
+        "signature": ""
     }
 }, {
     "pk": 2,
     "model": "djangobb_forum.profile",
     "fields": {
-        "status": "",
         "markup": "bbcode",
         "show_signatures": true,
         "language": "",
         "post_count": 3,
         "privacy_permission": 1,
-        "site": "",
-        "yahoo": "",
-        "aim": "",
-        "msn": "",
         "time_zone": 3.0,
         "user": 3,
-        "signature": "",
-        "icq": "",
-        "jabber": "",
-        "location": ""
+        "signature": ""
     }
 }, {
     "pk": 1,

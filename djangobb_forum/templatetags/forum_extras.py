@@ -3,7 +3,6 @@ from __future__ import unicode_literals
 
 from django import template
 from django.core.urlresolvers import reverse
-from django.core.cache import cache
 from django.utils.safestring import mark_safe
 from django.utils.encoding import smart_text
 from django.conf import settings
@@ -134,10 +133,6 @@ def forum_equal_to(obj1, obj2):
 
     return obj1 == obj2
 
-
-@register.filter
-def online(user):
-    return cache.get('djangobb_user%d' % user.id)
 
 @register.filter
 def attachment_link(attach):

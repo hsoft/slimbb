@@ -26,30 +26,10 @@
 				<div class="postleft">
 					<dl>
 						<dt><strong class="username">{{ post.user.username }}</strong></dt>
-						<dd class="usertitle">
-							{% if post.user.forum_profile.status %}
-								<strong>{{ post.user.forum_profile.status }}</strong>
-							{% else %}
-								<strong>{{ post.user.forum_profile.group }}</strong>
-							{% endif %}
-						</dd>
-						{% if post.user.forum_profile.location %}
-							<dd>{% trans "From:" %} {{ post.user.forum_profile.location }}</dd>
-						{% endif %}
 						<dd>{% trans "Registered:" %} {{ post.user.date_joined|date:"Y-m-d" }}</dd>
 						<dd>{% trans "Posts:" %} {{ post.user.forum_profile.post_count }}</dd>
 						{% if moderator %}
 							<dd>{% trans "IP:" %} {{ post.user_ip }}</dd>
-						{% endif %}
-						<dd class="usercontacts"><a href="{% url 'djangobb:forum_profile' post.user.username %}">{% trans "Profile" %}</a>&nbsp;&nbsp;
-						{% if forum_settings.USER_TO_USER_EMAIL %}
-							{% if post.user.forum_profile.privacy_permission == 0 %}
-								<a href="mailto:{{ post.user.email }}">{% trans "E-mail" %}</a>&nbsp;&nbsp;
-							{% else %}
-								{% if post.user.forum_profile.privacy_permission == 1 %}
-									<a href="{% url 'djangobb:misc' %}?mail_to={{ post.user.username }}">{% trans "Send e-mail" %}</a>&nbsp;&nbsp;
-								{% endif %}
-							{% endif %}
 						{% endif %}
 				</dl>
 			</div>
@@ -78,13 +58,6 @@
 				</div>
 			</div>
 			<div class="clearer"></div>
-			<div class="postfootleft">
-				{% if post.user|online %}
-					<p><strong>{% trans "Online" %}</strong></p>
-				{% else %}
-					<p>{% trans "Offline" %}</p>
-				{% endif %}
-			</div>
 			<div class="postfootright">
 				<ul>
 					<li class="postreport"><a href="{% url 'djangobb:misc' %}?action=report&amp;post_id={{ post.id }}">{% trans "Report" %}</a> </li>

@@ -194,46 +194,6 @@ class EssentialsProfileForm(forms.ModelForm):
         return self.profile
 
 
-class PersonalProfileForm(forms.ModelForm):
-    name = forms.CharField(label=_('Real name'), required=False)
-
-    class Meta:
-        model = Profile
-        fields = ['status', 'location', 'site']
-
-    def __init__(self, *args, **kwargs):
-        kwargs.pop('extra_args', {})
-        self.profile = kwargs['instance']
-        super(PersonalProfileForm, self).__init__(*args, **kwargs)
-        self.fields['name'].initial = "%s %s" % (self.profile.user.first_name, self.profile.user.last_name)
-
-    def save(self, commit=True):
-        self.profile.status = self.cleaned_data['status']
-        self.profile.location = self.cleaned_data['location']
-        self.profile.site = self.cleaned_data['site']
-        if self.cleaned_data['name']:
-            cleaned_name = self.cleaned_data['name'].strip()
-            if  ' ' in cleaned_name:
-                self.profile.user.first_name, self.profile.user.last_name = cleaned_name.split(None, 1)
-            else:
-                self.profile.user.first_name = cleaned_name
-                self.profile.user.last_name = ''
-            self.profile.user.save()
-            if commit:
-                self.profile.save()
-        return self.profile
-
-
-class MessagingProfileForm(forms.ModelForm):
-    class Meta:
-        model = Profile
-        fields = ['jabber', 'icq', 'msn', 'aim', 'yahoo']
-
-    def __init__(self, *args, **kwargs):
-        kwargs.pop('extra_args', {})
-        super(MessagingProfileForm, self).__init__(*args, **kwargs)
-
-
 class PersonalityProfileForm(forms.ModelForm):
     class Meta:
         model = Profile

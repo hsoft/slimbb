@@ -37,7 +37,7 @@ class PostAdmin(BaseModelAdmin):
     raw_id_fields = ['topic', 'user', 'updated_by']
 
 class ProfileAdmin(BaseModelAdmin):
-    list_display = ['user', 'status', 'time_zone', 'location', 'language']
+    list_display = ['user', 'time_zone', 'language']
     raw_id_fields = ['user']
 
 class PostTrackingAdmin(BaseModelAdmin):

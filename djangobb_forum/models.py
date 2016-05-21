@@ -244,14 +244,6 @@ class Post(models.Model):
 
 class Profile(models.Model):
     user = AutoOneToOneField(settings.AUTH_USER_MODEL, related_name='forum_profile', verbose_name=_('User'))
-    status = models.CharField(_('Status'), max_length=30, blank=True)
-    site = models.URLField(_('Site'), blank=True)
-    jabber = models.CharField(_('Jabber'), max_length=80, blank=True)
-    icq = models.CharField(_('ICQ'), max_length=12, blank=True)
-    msn = models.CharField(_('MSN'), max_length=80, blank=True)
-    aim = models.CharField(_('AIM'), max_length=80, blank=True)
-    yahoo = models.CharField(_('Yahoo'), max_length=80, blank=True)
-    location = models.CharField(_('Location'), max_length=30, blank=True)
     signature = models.TextField(_('Signature'), blank=True, default='', max_length=forum_settings.SIGNATURE_MAX_LENGTH)
     signature_html = models.TextField(_('Signature'), blank=True, default='', max_length=forum_settings.SIGNATURE_MAX_LENGTH)
     time_zone = models.CharField(_('Time zone'),max_length=50, choices=TZ_CHOICES, default=settings.TIME_ZONE)

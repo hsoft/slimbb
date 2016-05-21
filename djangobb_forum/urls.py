@@ -4,9 +4,7 @@ from djangobb_forum import settings as forum_settings
 from djangobb_forum import views as forum_views
 from djangobb_forum.feeds import LastPosts, LastTopics, LastPostsOnForum, \
      LastPostsOnCategory, LastPostsOnTopic
-from djangobb_forum.forms import \
-    PersonalProfileForm, MessagingProfileForm, PersonalityProfileForm, \
-    DisplayProfileForm, PrivacyProfileForm
+from djangobb_forum.forms import PersonalityProfileForm, DisplayProfileForm, PrivacyProfileForm
 
 
 urlpatterns = [
@@ -34,17 +32,6 @@ urlpatterns = [
         'form_class': PersonalityProfileForm,
         'template': 'djangobb_forum/profile/profile_personality.html'
         }, name='forum_profile_personality'),
-    url('^user/(?P<username>.*)/messaging/$', forum_views.user, {
-        'section': 'messaging',
-        'form_class': MessagingProfileForm,
-        'template': 'djangobb_forum/profile/profile_messaging.html'
-        }, name='forum_profile_messaging'),
-    url('^user/(?P<username>.*)/personal/$', forum_views.user, {
-        'section': 'personal',
-        'form_class': PersonalProfileForm,
-        'template': 'djangobb_forum/profile/profile_personal.html'
-        }, name='forum_profile_personal'),
-    url('^user/(?P<username>.*)/essentials/$', forum_views.user, name='forum_profile_essentials'),
     url('^user/(?P<username>.*)/$', forum_views.user, name='forum_profile'),
     url('^users/$', forum_views.users, name='forum_users'),
 
