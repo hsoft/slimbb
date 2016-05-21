@@ -2,7 +2,6 @@
 from __future__ import unicode_literals
 
 import os.path
-from datetime import timedelta
 
 from django import forms
 from django.conf import settings
@@ -10,8 +9,7 @@ from django.contrib.auth import get_user_model
 from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
 
-from djangobb_forum.models import Topic, Post, Profile, Report, \
-    Attachment, Poll, PollChoice
+from djangobb_forum.models import Topic, Post, Profile, Report, Attachment
 from djangobb_forum import settings as forum_settings
 from djangobb_forum.util import convert_text_to_html, set_language
 
@@ -204,7 +202,7 @@ class PersonalProfileForm(forms.ModelForm):
         fields = ['status', 'location', 'site']
 
     def __init__(self, *args, **kwargs):
-        extra_args = kwargs.pop('extra_args', {})
+        kwargs.pop('extra_args', {})
         self.profile = kwargs['instance']
         super(PersonalProfileForm, self).__init__(*args, **kwargs)
         self.fields['name'].initial = "%s %s" % (self.profile.user.first_name, self.profile.user.last_name)
@@ -232,7 +230,7 @@ class MessagingProfileForm(forms.ModelForm):
         fields = ['jabber', 'icq', 'msn', 'aim', 'yahoo']
 
     def __init__(self, *args, **kwargs):
-        extra_args = kwargs.pop('extra_args', {})
+        kwargs.pop('extra_args', {})
         super(MessagingProfileForm, self).__init__(*args, **kwargs)
 
 
@@ -242,7 +240,7 @@ class PersonalityProfileForm(forms.ModelForm):
         fields = ['show_avatar', 'signature']
 
     def __init__(self, *args, **kwargs):
-        extra_args = kwargs.pop('extra_args', {})
+        kwargs.pop('extra_args', {})
         self.profile = kwargs['instance']
         super(PersonalityProfileForm, self).__init__(*args, **kwargs)
         self.fields['signature'].widget = forms.Textarea(attrs={'class':'markup', 'rows':'10', 'cols':'75'})
@@ -261,7 +259,7 @@ class DisplayProfileForm(forms.ModelForm):
         fields = ['theme', 'markup']
 
     def __init__(self, *args, **kwargs):
-        extra_args = kwargs.pop('extra_args', {})
+        kwargs.pop('extra_args', {})
         super(DisplayProfileForm, self).__init__(*args, **kwargs)
 
 
@@ -271,7 +269,7 @@ class PrivacyProfileForm(forms.ModelForm):
         fields = ['privacy_permission']
 
     def __init__(self, *args, **kwargs):
-        extra_args = kwargs.pop('extra_args', {})
+        kwargs.pop('extra_args', {})
         super(PrivacyProfileForm, self).__init__(*args, **kwargs)
         self.fields['privacy_permission'].widget = forms.RadioSelect(
                                                     choices=self.fields['privacy_permission'].choices
@@ -284,7 +282,7 @@ class UploadAvatarForm(forms.ModelForm):
         fields = ['avatar']
 
     def __init__(self, *args, **kwargs):
-        extra_args = kwargs.pop('extra_args', {})
+        kwargs.pop('extra_args', {})
         super(UploadAvatarForm, self).__init__(*args, **kwargs)
 
 
@@ -361,87 +359,3 @@ class ReportForm(forms.ModelForm):
             report.save()
         return report
 
-
-class VotePollForm(forms.Form):
-    """
-    Dynamic form for the poll.
-    """
-    FORM_NAME = "VotePollForm" # used in view and template submit button
-
-    choice = forms.MultipleChoiceField()
-    def __init__(self, poll, *args, **kwargs):
-        self.poll = poll
-        super(VotePollForm, self).__init__(*args, **kwargs)
-
-        choices = self.poll.choices.all().values_list("id", "choice")
-        if self.poll.single_choice():
-            self.fields["choice"] = forms.ChoiceField(label=_("Choice"),
-                choices=choices, widget=forms.RadioSelect
-            )
-        else:
-            self.fields["choice"] = forms.MultipleChoiceField(label=_("Choice"),
-                choices=choices, widget=forms.CheckboxSelectMultiple
-            )
-
-    def clean_choice(self):
-        ids = self.cleaned_data["choice"]
-        if self.poll.single_choice(): # in a single choice scenario ChoiceField+RadioSelect are used (see above)
-            ids = [ids]               # which return a value itself, not a list
-        count = len(ids)
-        if count > self.poll.choice_count:
-            raise forms.ValidationError(
-                _('You have selected too many choices! (Only %i allowed.)') % self.poll.choice_count
-            )
-        return ids
-
-
-class PollForm(forms.ModelForm):
-    question = forms.CharField(label=_("Question"))
-    answers = forms.CharField(label=_("Answers"), min_length=2, widget=forms.Textarea,
-        help_text=_("Write each answer on a new line.")
-    )
-    days = forms.IntegerField(label=_("Days"), required=False, min_value=1,
-        help_text=_("Number of days for this poll to run. Leave empty for never ending poll.")
-    )
-    choice_count = forms.IntegerField(label=_("Choice count"), required=True, initial=1, min_value=1,
-        error_messages={'min_value': _("Number of choices must be positive.")},
-    )
-
-    class Meta:
-        model = Poll
-        fields = ['question', 'choice_count']
-
-    def has_data(self):
-        """
-        return True if one field filled with data -> the user wants to create a poll
-        """
-        return any(self.data.get(key) for key in ('question', 'answers', 'days'))
-
-    def clean_answers(self):
-        # validate if there is more than whitespaces ;)
-        raw_answers = self.cleaned_data["answers"]
-        answers = [answer.strip() for answer in raw_answers.splitlines() if answer.strip()]
-        if answers:
-            raise forms.ValidationError(_("There is no valid answer!"))
-
-        # validate length of all answers
-        is_max_length = max([len(answer) for answer in answers])
-        should_max_length = PollChoice._meta.get_field("choice").max_length
-        if is_max_length > should_max_length:
-            raise forms.ValidationError(_("One of this answers are too long!"))
-
-        return answers
-
-    def save(self, post):
-        """
-        Create poll and all answers in PollChoice model.
-        """
-        poll = super(PollForm, self).save(commit=False)
-        poll.topic = post.topic
-        days = self.cleaned_data["days"]
-        if days:
-            poll.deactivate_date = timezone.now() + timedelta(days=days)
-        poll.save()
-        answers = self.cleaned_data["answers"]
-        for answer in answers:
-            PollChoice.objects.create(poll=poll, choice=answer)

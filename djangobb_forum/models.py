@@ -8,7 +8,6 @@ from django.core.urlresolvers import reverse
 from django.conf import settings
 from django.contrib.auth.models import Group
 from django.db import models
-from django.db.models import aggregates
 from django.utils import timezone
 from django.utils.encoding import python_2_unicode_compatible
 from django.utils.translation import ugettext_lazy as _
@@ -381,49 +380,3 @@ class Attachment(models.Model):
         return os.path.join(settings.MEDIA_ROOT, forum_settings.ATTACHMENT_UPLOAD_TO,
                             self.path)
 
-
-@python_2_unicode_compatible
-class Poll(models.Model):
-    topic = models.ForeignKey(Topic)
-    question = models.CharField(max_length=200)
-    choice_count = models.PositiveSmallIntegerField(default=1,
-        help_text=_("How many choices are allowed simultaneously."),
-    )
-    active = models.BooleanField(default=True,
-        help_text=_("Can users vote to this poll or just see the result?"),
-    )
-    deactivate_date = models.DateTimeField(null=True, blank=True,
-        help_text=_("Point of time after this poll would be automatic deactivated"),
-    )
-    users = models.ManyToManyField(settings.AUTH_USER_MODEL, blank=True,
-        help_text=_("Users who has voted this poll."),
-    )
-    def deactivate_if_expired(self):
-        if self.active and self.deactivate_date:
-            now = timezone.now()
-            if now > self.deactivate_date:
-                self.active = False
-                self.save()
-
-    def single_choice(self):
-        return self.choice_count == 1
-
-    def __str__(self):
-        return self.question
-
-
-@python_2_unicode_compatible
-class PollChoice(models.Model):
-    poll = models.ForeignKey(Poll, related_name="choices")
-    choice = models.CharField(max_length=200)
-    votes = models.IntegerField(default=0, editable=False)
-
-    def percent(self):
-        if not self.votes:
-            return 0.0
-        result = PollChoice.objects.filter(poll=self.poll).aggregate(aggregates.Sum("votes"))
-        votes_sum = result["votes__sum"]
-        return float(self.votes) / votes_sum * 100
-
-    def __str__(self):
-        return self.choice

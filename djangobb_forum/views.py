@@ -14,7 +14,7 @@ from django.core.exceptions import SuspiciousOperation, PermissionDenied
 from django.core.urlresolvers import reverse
 from django.db import transaction
 from django.db.models import Q, F
-from django.http import Http404, HttpResponse, HttpResponseRedirect, HttpResponseForbidden
+from django.http import Http404, HttpResponse, HttpResponseRedirect
 from django.shortcuts import get_object_or_404, render
 from django.utils.encoding import smart_str
 from django.utils.translation import ugettext as _
@@ -25,8 +25,7 @@ from haystack.query import SearchQuerySet, SQ
 
 from djangobb_forum import settings as forum_settings
 from djangobb_forum.forms import AddPostForm, EditPostForm, UserSearchForm, \
-    PostSearchForm, MailToForm, EssentialsProfileForm, \
-    ReportForm, VotePollForm, PollForm
+    PostSearchForm, MailToForm, EssentialsProfileForm, ReportForm
 from djangobb_forum.models import Category, Forum, Topic, Post, \
     Attachment, PostTracking
 from djangobb_forum.templatetags import forum_extras
@@ -365,7 +364,6 @@ def show_topic(request, topic_id, full=True):
     """
     * Display a topic
     * save a reply
-    * save a poll vote
 
     TODO: Add reply in lofi mode
     """
@@ -416,44 +414,11 @@ def show_topic(request, topic_id, full=True):
                 **post_form_kwargs
             )
 
-    # handle poll, if exists
-    poll_form = None
-    polls = topic.poll_set.all()
-    if not polls:
-        poll = None
-    else:
-        poll = polls[0]
-        if user_is_authenticated: # Only logged in users can vote
-            poll.deactivate_if_expired()
-            has_voted = request.user in poll.users.all()
-            if not post_request or not VotePollForm.FORM_NAME in request.POST:
-                # It's not a POST request or: The reply form was send and not a poll vote
-                if poll.active and not has_voted:
-                    poll_form = VotePollForm(poll)
-            else:
-                if not poll.active:
-                    messages.error(request, _("This poll is not active!"))
-                    return HttpResponseRedirect(topic.get_absolute_url())
-                elif has_voted:
-                    messages.error(request, _("You have already vote to this poll in the past!"))
-                    return HttpResponseRedirect(topic.get_absolute_url())
-
-                poll_form = VotePollForm(poll, request.POST)
-                if poll_form.is_valid():
-                    ids = poll_form.cleaned_data["choice"]
-                    queryset = poll.choices.filter(id__in=ids)
-                    queryset.update(votes=F('votes') + 1)
-                    poll.users.add(request.user) # save that this user has vote
-                    messages.success(request, _("Your votes are saved."))
-                    return HttpResponseRedirect(topic.get_absolute_url())
-
     highlight_word = request.GET.get('hl', '')
     view_data = {
         'categories': Category.objects.all(),
         'topic': topic,
         'posts_page': get_page(posts, request, forum_settings.TOPIC_PAGE_SIZE),
-        'poll': poll,
-        'poll_form': poll_form,
     }
     if full:
         view_data.update({
@@ -473,9 +438,6 @@ def show_topic(request, topic_id, full=True):
 @login_required
 @transaction.atomic
 def add_topic(request, forum_id):
-    """
-    create a new topic, with or without poll
-    """
     forum = get_object_or_404(Forum, pk=forum_id)
     if not forum.category.has_access(request.user):
         raise PermissionDenied
@@ -483,7 +445,6 @@ def add_topic(request, forum_id):
     ip = request.META.get('REMOTE_ADDR', None)
     post_form_kwargs = {"forum": forum, "user": request.user, "ip": ip, }
 
-    poll_form = None
     if request.method == 'POST':
         form = AddPostForm(request.POST, request.FILES, **post_form_kwargs)
         if form.is_valid():
@@ -491,22 +452,9 @@ def add_topic(request, forum_id):
         else:
             all_valid = False
 
-        if forum_settings.ENABLE_POLLS:
-            poll_form = PollForm(request.POST)
-            if not poll_form.has_data():
-                # All poll fields are empty: User didn't want to create a poll
-                # Don't run validation and remove all form error messages
-                poll_form = PollForm() # create clean form without form errors
-            elif not poll_form.is_valid():
-                all_valid = False
-
         if all_valid:
             post = form.save()
-            if poll_form and poll_form.has_data():
-                poll_form.save(post)
-                messages.success(request, _("Topic with poll saved."))
-            else:
-                messages.success(request, _("Topic saved."))
+            messages.success(request, _("Topic saved."))
             return HttpResponseRedirect(post.get_absolute_url())
     else:
         form = AddPostForm(
@@ -516,12 +464,9 @@ def add_topic(request, forum_id):
             },
             **post_form_kwargs
         )
-        if forum_settings.ENABLE_POLLS and forum_id: # Create a new topic
-            poll_form = PollForm()
 
     context = {
         'forum': forum,
-        'create_poll_form': poll_form,
         'form': form,
         'form_url': request.path,
         'back_url': forum.get_absolute_url(),
@@ -711,7 +656,6 @@ def stick_unstick_topic(request, topic_id, action):
 @transaction.atomic
 def delete_post(request, post_id):
     post = get_object_or_404(Post, pk=post_id)
-    last_post = post.topic.last_post
     topic = post.topic
     forum = post.topic.forum
 
