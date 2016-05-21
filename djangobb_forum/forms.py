@@ -237,7 +237,7 @@ class MessagingProfileForm(forms.ModelForm):
 class PersonalityProfileForm(forms.ModelForm):
     class Meta:
         model = Profile
-        fields = ['show_avatar', 'signature']
+        fields = ['signature']
 
     def __init__(self, *args, **kwargs):
         kwargs.pop('extra_args', {})
@@ -274,16 +274,6 @@ class PrivacyProfileForm(forms.ModelForm):
         self.fields['privacy_permission'].widget = forms.RadioSelect(
                                                     choices=self.fields['privacy_permission'].choices
                                                     )
-
-
-class UploadAvatarForm(forms.ModelForm):
-    class Meta:
-        model = Profile
-        fields = ['avatar']
-
-    def __init__(self, *args, **kwargs):
-        kwargs.pop('extra_args', {})
-        super(UploadAvatarForm, self).__init__(*args, **kwargs)
 
 
 class UserSearchForm(forms.Form):

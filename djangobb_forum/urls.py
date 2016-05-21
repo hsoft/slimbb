@@ -4,9 +4,9 @@ from djangobb_forum import settings as forum_settings
 from djangobb_forum import views as forum_views
 from djangobb_forum.feeds import LastPosts, LastTopics, LastPostsOnForum, \
      LastPostsOnCategory, LastPostsOnTopic
-from djangobb_forum.forms import EssentialsProfileForm, \
+from djangobb_forum.forms import \
     PersonalProfileForm, MessagingProfileForm, PersonalityProfileForm, \
-    DisplayProfileForm, PrivacyProfileForm, UploadAvatarForm
+    DisplayProfileForm, PrivacyProfileForm
 
 
 urlpatterns = [
@@ -19,10 +19,6 @@ urlpatterns = [
     url('^misc/$', forum_views.misc, name='misc'),
 
     # User
-    url('^user/(?P<username>.*)/upload_avatar/$', forum_views.upload_avatar, {
-        'form_class': UploadAvatarForm,
-        'template': 'djangobb_forum/upload_avatar.html'
-        }, name='forum_profile_upload_avatar'),
     url('^user/(?P<username>.*)/privacy/$', forum_views.user, {
         'section': 'privacy',
         'form_class': PrivacyProfileForm,

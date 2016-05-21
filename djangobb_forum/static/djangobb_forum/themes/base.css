@@ -118,11 +118,6 @@ DIV.blockmenu, #viewprofile DT {
 	WIDTH: 13em
 }
 
-#profileavatar IMG {
-	FLOAT: right;
-	MARGIN-LEFT: 1em
-}
-
 #viewprofile DL {FLOAT: left; WIDTH: 100%; OVERFLOW: hidden}
 
 /****************************************************************/

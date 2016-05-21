@@ -464,29 +464,6 @@ def add_topic(request, forum_id):
 
 
 @transaction.atomic
-def upload_avatar(request, username, template=None, form_class=None):
-    user = get_object_or_404(User, username=username)
-    if request.user.is_authenticated() and user == request.user or request.user.is_superuser:
-        form = build_form(form_class, request, instance=user.forum_profile)
-        if request.method == 'POST' and form.is_valid():
-            form.save()
-            messages.success(request, _("Your avatar uploaded."))
-            return HttpResponseRedirect(reverse('djangobb:forum_profile', args=[user.username]))
-        return render(request, template, {'form': form,
-                'avatar_width': forum_settings.AVATAR_WIDTH,
-                'avatar_height': forum_settings.AVATAR_HEIGHT,
-               })
-    else:
-        topic_count = Topic.objects.filter(user__id=user.id).count()
-        if user.forum_profile.post_count < forum_settings.POST_USER_SEARCH and not request.user.is_authenticated():
-            messages.error(request, _("Please sign in."))
-            return HttpResponseRedirect(settings.LOGIN_URL + '?next=%s' % request.path)
-        return render(request, template, {'profile': user,
-                'topic_count': topic_count,
-               })
-
-
-@transaction.atomic
 def user(request, username, section='essentials', action=None, template='djangobb_forum/profile/profile_essentials.html', form_class=EssentialsProfileForm):
     user = get_object_or_404(User, username=username)
     if request.user.is_authenticated() and user == request.user or request.user.is_superuser:

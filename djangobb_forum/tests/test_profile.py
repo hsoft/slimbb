@@ -39,12 +39,6 @@ class TestProfile(TestCase):
         self.profile.yahoo = self.yahoo
         self.assertEqual(self.profile.yahoo, self.yahoo)
 
-    def test_personality_profile(self):
-        self.profile.show_avatar = False
-        self.assertEqual(self.profile.show_avatar, False)
-        self.profile.signature = self.signature
-        self.assertEqual(self.profile.signature, self.signature)
-
     def test_privacy_profile(self):
         self.profile.privacy_permission = 0
         self.assertEqual(self.profile.privacy_permission, 0)

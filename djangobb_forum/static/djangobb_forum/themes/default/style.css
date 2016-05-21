@@ -162,11 +162,6 @@ DIV.linksb, DIV.postlinksb {PADDING: 3px 6px 8px 6px}
 
 DIV.postleft DL, DIV.postright {PADDING: 6px}
 
-/* 8.2 Extra spacing for poster contact details and avatar */
-
-DD.usercontacts, DD.postavatar {MARGIN-TOP: 5px}
-DD.postavatar {MARGIN-BOTTOM: 5px}
-
 /* 8.3 Extra top spacing for signatures and edited by */
 
 DIV.postsignature, DIV.postmsg P.postedit {PADDING-TOP: 15px}

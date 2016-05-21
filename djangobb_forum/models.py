@@ -15,7 +15,7 @@ from django.utils.translation import ugettext_lazy as _
 
 import pytz
 
-from djangobb_forum.fields import AutoOneToOneField, ExtendedImageField, JSONField
+from djangobb_forum.fields import AutoOneToOneField, JSONField
 from djangobb_forum.util import convert_text_to_html
 from djangobb_forum import settings as forum_settings
 
@@ -84,10 +84,6 @@ class Forum(models.Model):
     post_count = models.IntegerField(_('Post count'), blank=True, default=0)
     topic_count = models.IntegerField(_('Topic count'), blank=True, default=0)
     last_post = models.ForeignKey('Post', related_name='last_forum_post', blank=True, null=True)
-    forum_logo = ExtendedImageField(_('Forum Logo'), blank=True, default='',
-                                    upload_to=forum_settings.FORUM_LOGO_UPLOAD_TO,
-                                    width=forum_settings.FORUM_LOGO_WIDTH,
-                                    height=forum_settings.FORUM_LOGO_HEIGHT)
 
     class Meta:
         ordering = ['position']
@@ -260,8 +256,6 @@ class Profile(models.Model):
     signature_html = models.TextField(_('Signature'), blank=True, default='', max_length=forum_settings.SIGNATURE_MAX_LENGTH)
     time_zone = models.CharField(_('Time zone'),max_length=50, choices=TZ_CHOICES, default=settings.TIME_ZONE)
     language = models.CharField(_('Language'), max_length=5, default='', choices=settings.LANGUAGES)
-    avatar = ExtendedImageField(_('Avatar'), blank=True, default='', upload_to=forum_settings.AVATARS_UPLOAD_TO, width=forum_settings.AVATAR_WIDTH, height=forum_settings.AVATAR_HEIGHT)
-    show_avatar = models.BooleanField(_('Show avatar'), blank=True, default=True)
     show_signatures = models.BooleanField(_('Show signatures'), blank=True, default=True)
     privacy_permission = models.IntegerField(_('Privacy permission'), choices=PRIVACY_CHOICES, default=1)
     auto_subscribe = models.BooleanField(_('Auto subscribe'), help_text=_("Auto subscribe all topics you have created or reply."), blank=True, default=False)

@@ -1,8 +1,6 @@
 # -*- coding: utf-8
 from __future__ import unicode_literals
 
-import hashlib
-
 from django import template
 from django.core.urlresolvers import reverse
 from django.core.cache import cache
@@ -12,10 +10,8 @@ from django.conf import settings
 from django.utils.html import escape
 from django.utils import timezone
 from django.contrib.humanize.templatetags.humanize import naturalday
-from django.utils.six.moves.urllib.parse import urlencode
 
 from djangobb_forum.models import Report
-from djangobb_forum import settings as forum_settings
 
 
 register = template.Library()
@@ -164,25 +160,6 @@ def attachment_link(attach):
 def new_reports():
     return Report.objects.filter(zapped=False).count()
 
-
-@register.simple_tag(takes_context=True)
-def gravatar(context, email):
-    if forum_settings.GRAVATAR_SUPPORT:
-        if 'request' in context:
-            is_secure = context['request'].is_secure()
-        else:
-            is_secure = False
-        size = max(forum_settings.AVATAR_WIDTH, forum_settings.AVATAR_HEIGHT)
-        url = 'https://secure.gravatar.com/avatar/%s?' if is_secure \
-            else 'http://www.gravatar.com/avatar/%s?'
-        url = url % hashlib.md5(email.lower().encode('ascii')).hexdigest()
-        url += urlencode({
-            'size': size,
-            'default': forum_settings.GRAVATAR_DEFAULT,
-        })
-        return url.replace('&', '&amp;')
-    else:
-        return ''
 
 # http://stackoverflow.com/a/16609498
 @register.simple_tag

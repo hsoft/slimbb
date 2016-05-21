@@ -34,7 +34,7 @@
 							{% else %}
 								<dd>{% trans "(Unknown)" %}</dd>
 							{% endif %}
-							
+
 							{% if forum_settings.USER_TO_USER_EMAIL %}
 								<dt>{% trans "E-mail:" %} </dt>
 								{% if profile.forum_profile.privacy_permission == 0 %}
@@ -97,12 +97,6 @@
 				<legend>{% trans "Personality" %}</legend>
 					<div class="infldset">
 						<dl>
-							<dt>{% trans "Avatar:" %} </dt>
-							{% if profile.forum_profile.avatar %}
-								<dd><img src="{{ profile.forum_profile.avatar.url }}" /></dd>
-							{% else %}
-								<dd>{% trans "(No avatar)" %}</dd>
-							{% endif %}
 							<dt>{% trans "Signature:" %} </dt>
 							{% if profile.forum_profile.signature_html %}
 								<dd>{{ profile.forum_profile.signature_html|safe }}</dd>
