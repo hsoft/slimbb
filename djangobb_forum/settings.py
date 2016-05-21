@@ -36,9 +36,6 @@ JQUERY_URL = get('DJANGOBB_JQUERY_URL', '//cdnjs.cloudflare.com/ajax/libs/jquery
 GRAVATAR_SUPPORT = get('DJANGOBB_GRAVATAR_SUPPORT', True)
 GRAVATAR_DEFAULT = get('DJANGOBB_GRAVATAR_DEFAULT', 'identicon')
 
-# LOFI Extension
-LOFI_SUPPORT = get('DJANGOBB_LOFI_SUPPORT', True)
-
 # PM Extension
 if 'django_messages' not in settings.INSTALLED_APPS:
     PM_SUPPORT = False

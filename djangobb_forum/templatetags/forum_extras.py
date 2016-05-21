@@ -62,17 +62,6 @@ def link(object, anchor=''):
     return mark_safe('<a href="%s">%s</a>' % (url, escape(anchor)))
 
 
-@register.simple_tag
-def lofi_link(object, anchor=''):
-    """
-    Return A tag with lofi_link to object.
-    """
-
-    url = hasattr(object, 'get_absolute_url') and object.get_absolute_url() or None
-    anchor = anchor or smart_text(object)
-    return mark_safe('<a href="%slofi/">%s</a>' % (url, escape(anchor)))
-
-
 @register.filter
 def has_unreads(topic, user):
     """

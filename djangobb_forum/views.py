@@ -35,7 +35,7 @@ from djangobb_forum.util import build_form, convert_text_to_html, get_page
 
 User = get_user_model()
 
-def index(request, full=True):
+def index(request):
     users_cached = cache.get('djangobb_users_online', {})
     users_online = users_cached and User.objects.filter(id__in=users_cached.keys()) or []
     guests_cached = cache.get('djangobb_guests_online', {})
@@ -70,10 +70,7 @@ def index(request, full=True):
                 'guest_count': guest_count,
                 'last_user': User.objects.latest('date_joined'),
                 }
-    if full:
-        return render(request, 'djangobb_forum/index.html', to_return)
-    else:
-        return render(request, 'djangobb_forum/lofi/index.html', to_return)
+    return render(request, 'djangobb_forum/index.html', to_return)
 
 
 @transaction.atomic
@@ -333,7 +330,7 @@ def misc(request):
                 )
 
 
-def show_forum(request, forum_id, full=True):
+def show_forum(request, forum_id):
     forum = get_object_or_404(Forum, pk=forum_id)
     if not forum.category.has_access(request.user):
         raise PermissionDenied
@@ -353,19 +350,14 @@ def show_forum(request, forum_id, full=True):
         'topics_page': get_page(topics, request, forum_settings.FORUM_PAGE_SIZE),
         'moderator': moderator,
     }
-    if full:
-        return render(request, 'djangobb_forum/forum.html', to_return)
-    else:
-        return render(request, 'djangobb_forum/lofi/forum.html', to_return)
+    return render(request, 'djangobb_forum/forum.html', to_return)
 
 
 @transaction.atomic
-def show_topic(request, topic_id, full=True):
+def show_topic(request, topic_id):
     """
     * Display a topic
     * save a reply
-
-    TODO: Add reply in lofi mode
     """
     post_request = request.method == "POST"
     user_is_authenticated = request.user.is_authenticated()
@@ -420,19 +412,16 @@ def show_topic(request, topic_id, full=True):
         'topic': topic,
         'posts_page': get_page(posts, request, forum_settings.TOPIC_PAGE_SIZE),
     }
-    if full:
-        view_data.update({
-            'last_post': last_post,
-            'form_url': form_url,
-            'reply_form': reply_form,
-            'back_url': back_url,
-            'moderator': moderator,
-            'subscribed': subscribed,
-            'highlight_word': highlight_word,
-        })
-        return render(request, 'djangobb_forum/topic.html', view_data)
-    else:
-        return render(request, 'djangobb_forum/lofi/topic.html', view_data)
+    view_data.update({
+        'last_post': last_post,
+        'form_url': form_url,
+        'reply_form': reply_form,
+        'back_url': back_url,
+        'moderator': moderator,
+        'subscribed': subscribed,
+        'highlight_word': highlight_word,
+    })
+    return render(request, 'djangobb_forum/topic.html', view_data)
 
 
 @login_required

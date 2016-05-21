@@ -93,11 +93,3 @@
 	{% endif %}
 </div>
 {% endblock %}
-
-{% block lofi %}
-{% if forum_settings.LOFI_SUPPORT %}
-    <p class="lofi">
-        <a href="{{ forum.get_absolute_url }}lofi/">Lo-Fi Version</a>
-    </p>
-{% endif %}
-{% endblock %}

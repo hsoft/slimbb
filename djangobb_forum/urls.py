@@ -81,14 +81,6 @@ urlpatterns = [
 
 ### EXTENSIONS ###
 
-# LOFI Extension
-if (forum_settings.LOFI_SUPPORT):
-    urlpatterns += [
-        url('^lofi/$', forum_views.index, {'full':False}, name='lofi_index'),
-        url('^(?P<forum_id>\d+)/lofi/$', forum_views.show_forum, {'full':False}, name='lofi_forum'),
-        url('^topic/(?P<topic_id>\d+)/lofi/$', forum_views.show_topic, {'full':False}, name='lofi_topic'),
-    ]
-
 # ATTACHMENT Extension
 if (forum_settings.ATTACHMENT_SUPPORT):
     urlpatterns += [
