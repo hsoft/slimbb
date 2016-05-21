@@ -151,33 +151,6 @@ def forum_equal_to(obj1, obj2):
 
 
 @register.filter
-def forum_authority(user):
-    posts = user.forum_profile.post_count
-    if posts >= forum_settings.AUTHORITY_STEP_10:
-        return mark_safe('<img src="%sdjangobb_forum/img/authority/vote10.gif" alt="" />' % (settings.STATIC_URL))
-    elif posts >= forum_settings.AUTHORITY_STEP_9:
-        return mark_safe('<img src="%sdjangobb_forum/img/authority/vote9.gif" alt="" />' % (settings.STATIC_URL))
-    elif posts >= forum_settings.AUTHORITY_STEP_8:
-        return mark_safe('<img src="%sdjangobb_forum/img/authority/vote8.gif" alt="" />' % (settings.STATIC_URL))
-    elif posts >= forum_settings.AUTHORITY_STEP_7:
-        return mark_safe('<img src="%sdjangobb_forum/img/authority/vote7.gif" alt="" />' % (settings.STATIC_URL))
-    elif posts >= forum_settings.AUTHORITY_STEP_6:
-        return mark_safe('<img src="%sdjangobb_forum/img/authority/vote6.gif" alt="" />' % (settings.STATIC_URL))
-    elif posts >= forum_settings.AUTHORITY_STEP_5:
-        return mark_safe('<img src="%sdjangobb_forum/img/authority/vote5.gif" alt="" />' % (settings.STATIC_URL))
-    elif posts >= forum_settings.AUTHORITY_STEP_4:
-        return mark_safe('<img src="%sdjangobb_forum/img/authority/vote4.gif" alt="" />' % (settings.STATIC_URL))
-    elif posts >= forum_settings.AUTHORITY_STEP_3:
-        return mark_safe('<img src="%sdjangobb_forum/img/authority/vote3.gif" alt="" />' % (settings.STATIC_URL))
-    elif posts >= forum_settings.AUTHORITY_STEP_2:
-        return mark_safe('<img src="%sdjangobb_forum/img/authority/vote2.gif" alt="" />' % (settings.STATIC_URL))
-    elif posts >= forum_settings.AUTHORITY_STEP_1:
-        return mark_safe('<img src="%sdjangobb_forum/img/authority/vote1.gif" alt="" />' % (settings.STATIC_URL))
-    else:
-        return mark_safe('<img src="%sdjangobb_forum/img/authority/vote0.gif" alt="" />' % (settings.STATIC_URL))
-
-
-@register.filter
 def online(user):
     return cache.get('djangobb_user%d' % user.id)
 

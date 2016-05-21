@@ -63,11 +63,6 @@
 								<strong>{{ post.user.forum_profile.group }}</strong>
 							{% endif %}
 						</dd>
-						{% if forum_settings.AUTHORITY_SUPPORT %}
-							<dd class="usertitle">
-								{{ post.user|forum_authority }}
-							</dd>
-						{% endif %}
 						<dd class="postavatar">
 							{% if post.user.forum_profile.avatar and post.user.forum_profile.show_avatar %}
 								<img src="{{ post.user.forum_profile.avatar.url }}" />
