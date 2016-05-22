@@ -223,19 +223,6 @@ class DisplayProfileForm(forms.ModelForm):
         super(DisplayProfileForm, self).__init__(*args, **kwargs)
 
 
-class PrivacyProfileForm(forms.ModelForm):
-    class Meta:
-        model = Profile
-        fields = ['privacy_permission']
-
-    def __init__(self, *args, **kwargs):
-        kwargs.pop('extra_args', {})
-        super(PrivacyProfileForm, self).__init__(*args, **kwargs)
-        self.fields['privacy_permission'].widget = forms.RadioSelect(
-                                                    choices=self.fields['privacy_permission'].choices
-                                                    )
-
-
 class UserSearchForm(forms.Form):
     username = forms.CharField(required=False, label=_('Username'))
     #show_group = forms.ChoiceField(choices=SHOW_GROUP_CHOICES)

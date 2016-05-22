@@ -22,12 +22,6 @@ from djangobb_forum import settings as forum_settings
 
 TZ_CHOICES = [(tz_name, tz_name) for tz_name in pytz.common_timezones]
 
-PRIVACY_CHOICES = (
-    (0, _('Display your e-mail address.')),
-    (1, _('Hide your e-mail address but allow form e-mail.')),
-    (2, _('Hide your e-mail address and disallow form e-mail.')),
-)
-
 MARKUP_CHOICES = [('bbcode', 'bbcode')]
 try:
     import markdown
@@ -249,7 +243,6 @@ class Profile(models.Model):
     time_zone = models.CharField(_('Time zone'),max_length=50, choices=TZ_CHOICES, default=settings.TIME_ZONE)
     language = models.CharField(_('Language'), max_length=5, default='', choices=settings.LANGUAGES)
     show_signatures = models.BooleanField(_('Show signatures'), blank=True, default=True)
-    privacy_permission = models.IntegerField(_('Privacy permission'), choices=PRIVACY_CHOICES, default=1)
     auto_subscribe = models.BooleanField(_('Auto subscribe'), help_text=_("Auto subscribe all topics you have created or reply."), blank=True, default=False)
     markup = models.CharField(_('Default markup'), max_length=15, default=forum_settings.DEFAULT_MARKUP, choices=MARKUP_CHOICES)
     post_count = models.IntegerField(_('Post count'), blank=True, default=0)
