@@ -94,7 +94,6 @@ class Topic(models.Model):
     created = models.DateTimeField(_('Created'), auto_now_add=True)
     updated = models.DateTimeField(_('Updated'), null=True)
     user = models.ForeignKey(settings.AUTH_USER_MODEL, verbose_name=_('User'))
-    views = models.IntegerField(_('Views count'), blank=True, default=0)
     sticky = models.BooleanField(_('Sticky'), blank=True, default=False)
     closed = models.BooleanField(_('Closed'), blank=True, default=False)
     subscribers = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name='subscriptions', verbose_name=_('Subscribers'), blank=True)

@@ -26,7 +26,6 @@
 				<tr>
 					<th class="tcl" scope="col">{% trans "Topic" %}</th>
 					<th class="tc2" scope="col">{% trans "Replies" %}</th>
-					<th class="tc3" scope="col">{% trans "Views" %}</th>
 					<th class="tcr" scope="col">{% trans "Last post" %}</th>
 				</tr>
 			</thead>
@@ -49,7 +48,6 @@
                         </div>
                     </td>
                     <td class="tc2">{{ topic.reply_count }}</td>
-                    <td class="tc3">{{ topic.views }}</td>
                     <td class="tcr"><a href="{{ topic.last_post.get_absolute_url }}">{% forum_time topic.updated %}</a> <span class="byuser">{% trans "by" %} {{ topic.last_post.user.username }}</span></td>
                 </tr>
             {% empty %}

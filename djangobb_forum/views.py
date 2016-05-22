@@ -8,11 +8,10 @@ from django.utils import timezone
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import get_user_model
-from django.core.cache import cache
 from django.core.exceptions import SuspiciousOperation, PermissionDenied
 from django.core.urlresolvers import reverse
 from django.db import transaction
-from django.db.models import Q, F
+from django.db.models import Q
 from django.http import Http404, HttpResponse, HttpResponseRedirect
 from django.shortcuts import get_object_or_404, render
 from django.utils.encoding import smart_str
@@ -330,7 +329,6 @@ def show_topic(request, topic_id):
     topic = get_object_or_404(Topic.objects.select_related(), pk=topic_id)
     if not topic.forum.category.has_access(request.user):
         raise PermissionDenied
-    Topic.objects.filter(pk=topic.id).update(views=F('views') + 1)
 
     last_post = topic.last_post
 
