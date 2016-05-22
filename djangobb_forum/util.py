@@ -9,6 +9,7 @@ except AttributeError:
     class HTMLParseError(Exception):
         pass
 
+import bleach
 import markdown
 
 from django.conf import settings
@@ -183,7 +184,7 @@ def set_language(request, language):
 
 
 def convert_text_to_html(text):
-    text = markdown.markdown(text, safe_mode='escape')
+    text = markdown.markdown(bleach.clean(text))
     text = urlize(text)
     if forum_settings.NOFOLLOW_LINKS:
         text = add_rel_nofollow(text)

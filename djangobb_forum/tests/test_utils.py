@@ -23,7 +23,7 @@ class TestParsers(TestCase):
     def test_convert_text_to_html(self):
         markdown = "**Lorem** `ipsum :)` [label](http://www.example.com) =)"
         html = convert_text_to_html(markdown)
-        self.assertEqual(html, "<strong>Lorem</strong> <code>ipsum :)</code><a href=\"http://www.example.com/\" rel=\"nofollow\">label</a> =)")
+        self.assertEqual(html, "<p><strong>Lorem</strong> <code>ipsum :)</code><a href=\"http://www.example.com\" rel=\"nofollow\">label</a> =)</p>")
 
 
 class TestPaginators(TestCase):
