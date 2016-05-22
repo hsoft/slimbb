@@ -29,6 +29,7 @@ class Category(models.Model):
     position = models.IntegerField(_('Position'), blank=True, default=0)
 
     class Meta:
+        db_table = 'slimbb_category'
         ordering = ['position']
         verbose_name = _('Category')
         verbose_name_plural = _('Categories')
@@ -72,6 +73,7 @@ class Forum(models.Model):
     last_post = models.ForeignKey('Post', related_name='last_forum_post', blank=True, null=True)
 
     class Meta:
+        db_table = 'slimbb_forum'
         ordering = ['position']
         verbose_name = _('Forum')
         verbose_name_plural = _('Forums')
@@ -101,6 +103,7 @@ class Topic(models.Model):
     last_post = models.ForeignKey('Post', related_name='last_topic_post', blank=True, null=True)
 
     class Meta:
+        db_table = 'slimbb_topic'
         ordering = ['-updated']
         get_latest_by = 'updated'
         verbose_name = _('Topic')
@@ -179,6 +182,7 @@ class Post(models.Model):
 
 
     class Meta:
+        db_table = 'slimbb_post'
         ordering = ['created']
         get_latest_by = 'created'
         verbose_name = _('Post')
@@ -240,6 +244,7 @@ class Profile(models.Model):
     post_count = models.IntegerField(_('Post count'), blank=True, default=0)
 
     class Meta:
+        db_table = 'slimbb_profile'
         verbose_name = _('Profile')
         verbose_name_plural = _('Profiles')
 
@@ -263,6 +268,7 @@ class PostTracking(models.Model):
     last_read = models.DateTimeField(null=True, blank=True)
 
     class Meta:
+        db_table = 'slimbb_posttracking'
         verbose_name = _('Post tracking')
         verbose_name_plural = _('Post tracking')
 
@@ -280,6 +286,7 @@ class Report(models.Model):
     reason = models.TextField(_('Reason'), blank=True, default='', max_length='1000')
 
     class Meta:
+        db_table = 'slimbb_report'
         verbose_name = _('Report')
         verbose_name_plural = _('Reports')
 
@@ -295,6 +302,7 @@ class Ban(models.Model):
     reason = models.TextField(_('Reason'))
 
     class Meta:
+        db_table = 'slimbb_ban'
         verbose_name = _('Ban')
         verbose_name_plural = _('Bans')
 
@@ -320,6 +328,9 @@ class Attachment(models.Model):
     path = models.CharField(_('Path'), max_length=255)
     name = models.TextField(_('Name'))
     hash = models.CharField(_('Hash'), max_length=40, blank=True, default='', db_index=True)
+
+    class Meta:
+        db_table = 'slimbb_attachment'
 
     def __str__(self):
         return self.name
