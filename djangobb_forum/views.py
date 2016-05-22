@@ -371,7 +371,6 @@ def show_topic(request, topic_id):
         else:
             reply_form = AddPostForm(
                 initial={
-                    'markup': request.user.forum_profile.markup,
                     'subscribe': request.user.forum_profile.auto_subscribe,
                 },
                 **post_form_kwargs
@@ -419,7 +418,6 @@ def add_topic(request, forum_id):
     else:
         form = AddPostForm(
             initial={
-                'markup': request.user.forum_profile.markup,
                 'subscribe': request.user.forum_profile.auto_subscribe,
             },
             **post_form_kwargs
@@ -435,19 +433,19 @@ def add_topic(request, forum_id):
 
 
 @transaction.atomic
-def user(request, username, section='essentials', action=None, template='djangobb_forum/profile/profile_essentials.html', form_class=EssentialsProfileForm):
+def user(request, username):
     user = get_object_or_404(User, username=username)
     if request.user.is_authenticated() and user == request.user or request.user.is_superuser:
-        form = build_form(form_class, request, instance=user.forum_profile, extra_args={'request': request})
+        form = build_form(EssentialsProfileForm, request, instance=user.forum_profile, extra_args={'request': request})
         if request.method == 'POST' and form.is_valid():
             form.save()
-            profile_url = reverse('djangobb:forum_profile_%s' % section, args=[user.username])
+            profile_url = reverse('djangobb:forum_profile', args=[user.username])
             messages.success(request, _("User profile saved."))
             return HttpResponseRedirect(profile_url)
-        return render(request, template, {'active_menu': section,
-                'profile': user,
-                'form': form,
-               })
+        return render(request, 'djangobb_forum/profile.html', {
+            'profile': user,
+            'form': form,
+        })
     else:
         template = 'djangobb_forum/user.html'
         topic_count = Topic.objects.filter(user__id=user.id).count()
@@ -514,10 +512,7 @@ def delete_posts(request, topic_id):
 
     posts = topic.posts.all().select_related()
 
-    initial = {}
-    if request.user.is_authenticated():
-        initial = {'markup': request.user.forum_profile.markup}
-    form = AddPostForm(topic=topic, initial=initial)
+    form = AddPostForm(topic=topic)
 
     moderator = request.user.is_superuser or\
         request.user in topic.forum.moderators.all()
@@ -673,8 +668,6 @@ def show_attachment(request, hash):
 @csrf_exempt
 def post_preview(request):
     '''Preview for markitup'''
-    markup = request.user.forum_profile.markup
     data = request.POST.get('data', '')
-
-    data = convert_text_to_html(data, markup)
+    data = convert_text_to_html(data)
     return render(request, 'djangobb_forum/post_preview.html', {'data': data})

@@ -194,7 +194,7 @@
         "updated": null,
         "updated_by": null,
         "created": "2010-11-27 19:58:38",
-        "markup": "bbcode",
+        "markup": "markdown",
         "body_html": "Test Body",
         "topic": 1,
         "user": 1
@@ -208,7 +208,7 @@
         "updated": null,
         "updated_by": null,
         "created": "2011-05-17 10:53:24",
-        "markup": "bbcode",
+        "markup": "markdown",
         "body_html": "Test body 2",
         "topic": 1,
         "user": 1
@@ -222,7 +222,7 @@
         "updated": null,
         "updated_by": null,
         "created": "2011-05-17 10:53:29",
-        "markup": "bbcode",
+        "markup": "markdown",
         "body_html": "Test body 3",
         "topic": 1,
         "user": 1
@@ -236,7 +236,7 @@
         "updated": null,
         "updated_by": null,
         "created": "2011-05-17 10:53:51",
-        "markup": "bbcode",
+        "markup": "markdown",
         "body_html": "Test body 4",
         "topic": 1,
         "user": 3
@@ -250,7 +250,7 @@
         "updated": null,
         "updated_by": null,
         "created": "2011-05-17 10:54:09",
-        "markup": "bbcode",
+        "markup": "markdown",
         "body_html": "Test body",
         "topic": 2,
         "user": 3
@@ -264,7 +264,7 @@
         "updated": null,
         "updated_by": null,
         "created": "2011-05-17 10:54:16",
-        "markup": "bbcode",
+        "markup": "markdown",
         "body_html": "Test body 2",
         "topic": 2,
         "user": 3
@@ -273,11 +273,9 @@
     "pk": 1,
     "model": "djangobb_forum.profile",
     "fields": {
-        "markup": "bbcode",
         "show_signatures": true,
         "language": "",
         "post_count": 3,
-        "privacy_permission": 1,
         "time_zone": 3.0,
         "user": 1,
         "signature": ""
@@ -286,11 +284,9 @@
     "pk": 2,
     "model": "djangobb_forum.profile",
     "fields": {
-        "markup": "bbcode",
         "show_signatures": true,
         "language": "",
         "post_count": 3,
-        "privacy_permission": 1,
         "time_zone": 3.0,
         "user": 3,
         "signature": ""

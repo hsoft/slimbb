@@ -9,18 +9,12 @@ except AttributeError:
     class HTMLParseError(Exception):
         pass
 
-from postmarkup import render_bbcode
-from json import JSONEncoder
-try:
-    import markdown
-except ImportError:
-    pass
+import markdown
 
 from django.conf import settings
-from django.http import Http404
 from django.utils.translation import check_for_language
 from django.template.defaultfilters import urlize as django_urlize
-from django.core.paginator import Paginator, EmptyPage, InvalidPage
+from django.core.paginator import Paginator, InvalidPage
 from django.contrib.sites.models import Site
 
 from djangobb_forum import settings as forum_settings
@@ -188,13 +182,8 @@ def set_language(request, language):
         request.session['django_language'] = language
 
 
-def convert_text_to_html(text, markup):
-    if markup == 'bbcode':
-        text = render_bbcode(text)
-    elif markup == 'markdown':
-        text = markdown.markdown(text, safe_mode='escape')
-    else:
-        raise Exception('Invalid markup property: %s' % markup)
+def convert_text_to_html(text):
+    text = markdown.markdown(text, safe_mode='escape')
     text = urlize(text)
     if forum_settings.NOFOLLOW_LINKS:
         text = add_rel_nofollow(text)

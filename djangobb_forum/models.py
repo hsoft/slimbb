@@ -22,14 +22,6 @@ from djangobb_forum import settings as forum_settings
 
 TZ_CHOICES = [(tz_name, tz_name) for tz_name in pytz.common_timezones]
 
-MARKUP_CHOICES = [('bbcode', 'bbcode')]
-try:
-    import markdown
-    del markdown
-    MARKUP_CHOICES.append(("markdown", "markdown"))
-except ImportError:
-    pass
-
 @python_2_unicode_compatible
 class Category(models.Model):
     name = models.CharField(_('Name'), max_length=80)
@@ -178,7 +170,10 @@ class Post(models.Model):
     created = models.DateTimeField(_('Created'), auto_now_add=True)
     updated = models.DateTimeField(_('Updated'), blank=True, null=True)
     updated_by = models.ForeignKey(settings.AUTH_USER_MODEL, verbose_name=_('Updated by'), blank=True, null=True)
-    markup = models.CharField(_('Markup'), max_length=15, default=forum_settings.DEFAULT_MARKUP, choices=MARKUP_CHOICES)
+    # slimbb only supports markdown, but it's possible that older djangobb posts were written in
+    # another markup. We want to remember that information so that we can disable the edit button
+    # if we're dealing with an unsupported markup.
+    markup = models.CharField(_('Markup'), max_length=15, default='markdown')
     body = models.TextField(_('Message'))
     body_html = models.TextField(_('HTML version'))
     user_ip = models.GenericIPAddressField(_('User IP'), blank=True, null=True)
@@ -191,9 +186,8 @@ class Post(models.Model):
         verbose_name_plural = _('Posts')
 
     def save(self, *args, **kwargs):
-        self.body_html = convert_text_to_html(self.body, self.markup)
+        self.body_html = convert_text_to_html(self.body)
         super(Post, self).save(*args, **kwargs)
-
 
     def delete(self, *args, **kwargs):
         self_id = self.id
@@ -244,7 +238,6 @@ class Profile(models.Model):
     language = models.CharField(_('Language'), max_length=5, default='', choices=settings.LANGUAGES)
     show_signatures = models.BooleanField(_('Show signatures'), blank=True, default=True)
     auto_subscribe = models.BooleanField(_('Auto subscribe'), help_text=_("Auto subscribe all topics you have created or reply."), blank=True, default=False)
-    markup = models.CharField(_('Default markup'), max_length=15, default=forum_settings.DEFAULT_MARKUP, choices=MARKUP_CHOICES)
     post_count = models.IntegerField(_('Post count'), blank=True, default=0)
 
     class Meta:

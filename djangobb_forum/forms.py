@@ -114,9 +114,10 @@ class AddPostForm(forms.ModelForm):
             # User would like to subscripe to this topic
             topic.subscribers.add(self.user)
 
-        post = Post(topic=topic, user=self.user, user_ip=self.ip,
-                    markup=self.user.forum_profile.markup,
-                    body=self.cleaned_data['body'])
+        post = Post(
+            topic=topic, user=self.user, user_ip=self.ip,
+            body=self.cleaned_data['body']
+        )
 
         post.save()
         if forum_settings.ATTACHMENT_SUPPORT:
@@ -168,7 +169,7 @@ class EssentialsProfileForm(forms.ModelForm):
 
     class Meta:
         model = Profile
-        fields = ['auto_subscribe', 'time_zone', 'language']
+        fields = ['auto_subscribe', 'time_zone', 'language', 'signature']
 
     def __init__(self, *args, **kwargs):
         extra_args = kwargs.pop('extra_args', {})
@@ -179,6 +180,7 @@ class EssentialsProfileForm(forms.ModelForm):
         if not self.request.user.is_superuser:
             self.fields['username'].widget = forms.HiddenInput()
         self.fields['email'].initial = self.profile.user.email
+        self.fields['signature'].widget = forms.Textarea(attrs={'class':'markup', 'rows':'10', 'cols':'75'})
 
     def save(self, commit=True):
         if self.cleaned_data:
@@ -187,40 +189,12 @@ class EssentialsProfileForm(forms.ModelForm):
             self.profile.user.email = self.cleaned_data['email']
             self.profile.time_zone = self.cleaned_data['time_zone']
             self.profile.language = self.cleaned_data['language']
+            self.profile.signature_html = convert_text_to_html(self.profile.signature)
             self.profile.user.save()
             if commit:
                 self.profile.save()
         set_language(self.request, self.profile.language)
         return self.profile
-
-
-class PersonalityProfileForm(forms.ModelForm):
-    class Meta:
-        model = Profile
-        fields = ['signature']
-
-    def __init__(self, *args, **kwargs):
-        kwargs.pop('extra_args', {})
-        self.profile = kwargs['instance']
-        super(PersonalityProfileForm, self).__init__(*args, **kwargs)
-        self.fields['signature'].widget = forms.Textarea(attrs={'class':'markup', 'rows':'10', 'cols':'75'})
-
-    def save(self, commit=True):
-        profile = super(PersonalityProfileForm, self).save(commit=False)
-        profile.signature_html = convert_text_to_html(profile.signature, self.profile.markup)
-        if commit:
-            profile.save()
-        return profile
-
-
-class DisplayProfileForm(forms.ModelForm):
-    class Meta:
-        model = Profile
-        fields = ['markup']
-
-    def __init__(self, *args, **kwargs):
-        kwargs.pop('extra_args', {})
-        super(DisplayProfileForm, self).__init__(*args, **kwargs)
 
 
 class UserSearchForm(forms.Form):
