@@ -40,8 +40,6 @@ if not settings.configured and not os.environ.get('DJANGO_SETTINGS_MODULE'):
                 'django.middleware.locale.LocaleMiddleware',
                 'django.middleware.locale.LocaleMiddleware',
 
-                'djangobb_forum.middleware.LastLoginMiddleware',
-                'djangobb_forum.middleware.UsersOnline',
                 'djangobb_forum.middleware.TimezoneMiddleware',
         ],
         TEMPLATES=[{'BACKEND': 'django.template.backends.django.DjangoTemplates',

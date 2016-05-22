@@ -35,12 +35,6 @@ from djangobb_forum.util import build_form, convert_text_to_html, get_page
 User = get_user_model()
 
 def index(request):
-    users_cached = cache.get('djangobb_users_online', {})
-    users_online = users_cached and User.objects.filter(id__in=users_cached.keys()) or []
-    guests_cached = cache.get('djangobb_guests_online', {})
-    guest_count = len(guests_cached)
-    users_count = len(users_online)
-
     _forums = Forum.objects.all()
     user = request.user
     if not user.is_superuser:
@@ -60,15 +54,12 @@ def index(request):
     cmpkey = lambda x: x['cat'].position
     cats = sorted(cats.values(), key=cmpkey)
 
-    to_return = {'cats': cats,
-                'posts': Post.objects.count(),
-                'topics': Topic.objects.count(),
-                'users': User.objects.count(),
-                'users_online': users_online,
-                'online_count': users_count,
-                'guest_count': guest_count,
-                'last_user': User.objects.latest('date_joined'),
-                }
+    to_return = {
+        'cats': cats,
+        'posts': Post.objects.count(),
+        'topics': Topic.objects.count(),
+        'users': User.objects.count(),
+    }
     return render(request, 'djangobb_forum/index.html', to_return)
 
 
