@@ -1,0 +1,308 @@
+[{
+    "pk": 1,
+    "model": "auth.group",
+    "fields": {
+        "name": "secret_group",
+        "permissions": []
+    }
+}, {
+    "pk": 1,
+    "model": "auth.user",
+    "fields": {
+        "username": "slimbb",
+        "first_name": "",
+        "last_name": "",
+        "is_active": true,
+        "is_superuser": true,
+        "is_staff": true,
+        "last_login": "2011-05-17 10:54:40",
+        "groups": [],
+        "user_permissions": [],
+        "password": "sha1$1c9f3$a7684d8297cec9f1254edb3f072a249969b7914f",
+        "email": "alafin@ukr.net",
+        "date_joined": "2010-11-27 16:19:37"
+    }
+}, {
+    "pk": 2,
+    "model": "auth.user",
+    "fields": {
+        "username": "alafin",
+        "first_name": "",
+        "last_name": "",
+        "is_active": true,
+        "is_superuser": false,
+        "is_staff": false,
+        "last_login": "2010-11-27 16:33:47",
+        "groups": [],
+        "user_permissions": [],
+        "password": "sha1$db3a7$b6a47b44fabf6e266a2aaac0871edb70ff512e1b",
+        "email": "alafin@python.su",
+        "date_joined": "2010-11-27 16:33:47"
+    }
+}, {
+    "pk": 3,
+    "model": "auth.user",
+    "fields": {
+        "username": "slav0nic",
+        "first_name": "",
+        "last_name": "",
+        "is_active": true,
+        "is_superuser": false,
+        "is_staff": false,
+        "last_login": "2011-05-17 10:56:43",
+        "groups": [1],
+        "user_permissions": [],
+        "password": "sha1$b6ae5$a0e988b85a3bcf6957b70ade2b34e2883968d647",
+        "email": "slav0nic0@gmail.com",
+        "date_joined": "2010-11-27 16:35:05"
+    }
+}, {
+    "pk": 4,
+    "model": "auth.user",
+    "fields": {
+        "username": "test",
+        "first_name": "",
+        "last_name": "",
+        "is_active": false,
+        "is_superuser": false,
+        "is_staff": false,
+        "last_login": "2010-11-27 16:35:40",
+        "groups": [],
+        "user_permissions": [],
+        "password": "sha1$499ca$a5d3b46cc97e9336217508c6189fa9d3f73ccd9b",
+        "email": "test@example.com",
+        "date_joined": "2010-11-27 16:35:40"
+    }
+}, {
+    "pk": 3,
+    "model": "slimbb.category",
+    "fields": {
+        "position": 0,
+        "name": "Secret",
+        "groups": [1]
+    }
+}, {
+    "pk": 1,
+    "model": "slimbb.category",
+    "fields": {
+        "position": 1,
+        "name": "General",
+        "groups": []
+    }
+}, {
+    "pk": 2,
+    "model": "slimbb.category",
+    "fields": {
+        "position": 2,
+        "name": "Other",
+        "groups": []
+    }
+}, {
+    "pk": 3,
+    "model": "slimbb.forum",
+    "fields": {
+        "category": 2,
+        "updated": "2010-11-27 18:08:16",
+        "name": "Jython",
+        "post_count": 0,
+        "topic_count": 0,
+        "moderators": [],
+        "position": 0,
+        "last_post": null,
+        "description": "Jython questions"
+    }
+}, {
+    "pk": 4,
+    "model": "slimbb.forum",
+    "fields": {
+        "category": 3,
+        "updated": "2011-05-17 10:55:44",
+        "name": "Secret Forum",
+        "post_count": 0,
+        "topic_count": 0,
+        "moderators": [],
+        "position": 0,
+        "last_post": null,
+        "description": "forum for `secret` group"
+    }
+}, {
+    "pk": 1,
+    "model": "slimbb.forum",
+    "fields": {
+        "category": 1,
+        "updated": "2011-05-17 10:54:16",
+        "name": "Python",
+        "post_count": 6,
+        "topic_count": 2,
+        "moderators": [],
+        "position": 1,
+        "last_post": 6,
+        "description": "Python questions"
+    }
+}, {
+    "pk": 2,
+    "model": "slimbb.forum",
+    "fields": {
+        "category": 1,
+        "updated": "2010-11-27 18:08:40",
+        "name": "Django",
+        "post_count": 0,
+        "topic_count": 0,
+        "moderators": [],
+        "position": 2,
+        "last_post": null,
+        "description": "Django questions"
+    }
+}, {
+    "pk": 2,
+    "model": "slimbb.topic",
+    "fields": {
+        "updated": "2011-05-17 10:54:16",
+        "name": "Test title2",
+        "forum": 1,
+        "post_count": 2,
+        "created": "2011-05-17 10:54:09",
+        "subscribers": [],
+        "sticky": false,
+        "user": 3,
+        "closed": false,
+        "last_post": 6
+    }
+}, {
+    "pk": 1,
+    "model": "slimbb.topic",
+    "fields": {
+        "updated": "2011-05-17 10:53:52",
+        "name": "Test Title",
+        "forum": 1,
+        "post_count": 4,
+        "created": "2010-11-27 19:58:38",
+        "subscribers": [],
+        "sticky": false,
+        "user": 1,
+        "closed": false,
+        "last_post": 4
+    }
+}, {
+    "pk": 1,
+    "model": "slimbb.post",
+    "fields": {
+        "body": "Test Body",
+        "user_ip": "127.0.0.1",
+        "updated": null,
+        "updated_by": null,
+        "created": "2010-11-27 19:58:38",
+        "markup": "markdown",
+        "body_html": "Test Body",
+        "topic": 1,
+        "user": 1
+    }
+}, {
+    "pk": 2,
+    "model": "slimbb.post",
+    "fields": {
+        "body": "Test body 2",
+        "user_ip": "127.0.0.1",
+        "updated": null,
+        "updated_by": null,
+        "created": "2011-05-17 10:53:24",
+        "markup": "markdown",
+        "body_html": "Test body 2",
+        "topic": 1,
+        "user": 1
+    }
+}, {
+    "pk": 3,
+    "model": "slimbb.post",
+    "fields": {
+        "body": "Test body 3",
+        "user_ip": "127.0.0.1",
+        "updated": null,
+        "updated_by": null,
+        "created": "2011-05-17 10:53:29",
+        "markup": "markdown",
+        "body_html": "Test body 3",
+        "topic": 1,
+        "user": 1
+    }
+}, {
+    "pk": 4,
+    "model": "slimbb.post",
+    "fields": {
+        "body": "Test body 4",
+        "user_ip": "127.0.0.1",
+        "updated": null,
+        "updated_by": null,
+        "created": "2011-05-17 10:53:51",
+        "markup": "markdown",
+        "body_html": "Test body 4",
+        "topic": 1,
+        "user": 3
+    }
+}, {
+    "pk": 5,
+    "model": "slimbb.post",
+    "fields": {
+        "body": "Test body",
+        "user_ip": "127.0.0.1",
+        "updated": null,
+        "updated_by": null,
+        "created": "2011-05-17 10:54:09",
+        "markup": "markdown",
+        "body_html": "Test body",
+        "topic": 2,
+        "user": 3
+    }
+}, {
+    "pk": 6,
+    "model": "slimbb.post",
+    "fields": {
+        "body": "Test body 2",
+        "user_ip": "127.0.0.1",
+        "updated": null,
+        "updated_by": null,
+        "created": "2011-05-17 10:54:16",
+        "markup": "markdown",
+        "body_html": "Test body 2",
+        "topic": 2,
+        "user": 3
+    }
+}, {
+    "pk": 1,
+    "model": "slimbb.profile",
+    "fields": {
+        "show_signatures": true,
+        "language": "",
+        "post_count": 3,
+        "time_zone": 3.0,
+        "user": 1,
+        "signature": ""
+    }
+}, {
+    "pk": 2,
+    "model": "slimbb.profile",
+    "fields": {
+        "show_signatures": true,
+        "language": "",
+        "post_count": 3,
+        "time_zone": 3.0,
+        "user": 3,
+        "signature": ""
+    }
+}, {
+    "pk": 1,
+    "model": "slimbb.posttracking",
+    "fields": {
+        "topics": "{u'1': 3}",
+        "user": 1,
+        "last_read": null
+    }
+}, {
+    "pk": 2,
+    "model": "slimbb.posttracking",
+    "fields": {
+        "topics": "{u'1': 4, u'2': 6}",
+        "user": 3,
+        "last_read": null
+    }
+}]

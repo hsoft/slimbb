@@ -1,0 +1,141 @@
+{% extends 'slimbb/base.html' %}
+{% load forum_extras %}
+{% load i18n %}
+
+{% block title %}{{ topic.forum.name }} / {{ topic.name }} / {% endblock %}
+{% block content %}
+<div class="linkst">
+	<div class="inbox">
+		<div class="pagelink conl">{% include 'slimbb/paginator.html' with page=posts_page request=request only %}</div>
+		<ul>
+			<li>
+			<a href="{% url 'slimbb:index' %}">{% trans "Root" %} </a></li><li>&raquo; {% link topic.forum %} </li><li>&raquo; {{ topic.name }}
+			<a href="{% url 'slimbb:forum_topic_feed' topic.id %}"><img src="{{ STATIC_URL }}slimbb/img/feed-icon-small.png" alt="[RSS Feed]" title="[RSS Feed]" class="breadcrumb_rss" /></a>
+			</li>
+		</ul>
+		<div class="clearer"></div>
+	</div>
+</div>
+
+{% for post in posts_page %}
+	<div id="p{{ post.id }}" class="blockpost roweven firstpost">
+		<a name="post-{{ post.id }}"></a>
+		<h2><span><span class="conr">#{{ forloop.counter }}&nbsp;</span><a href="{{ post.get_absolute_url }}">{% forum_time post.created %}</a></span></h2>
+		<div class="box">
+			<div class="inbox">
+				<div class="postleft">
+					<dl>
+						<dt><strong class="username">{{ post.user.username }}</strong></dt>
+						<dd>{% trans "Registered:" %} {{ post.user.date_joined|date:"Y-m-d" }}</dd>
+						<dd>{% trans "Posts:" %} {{ post.user.forum_profile.post_count }}</dd>
+						{% if moderator %}
+							<dd>{% trans "IP:" %} {{ post.user_ip }}</dd>
+						{% endif %}
+				</dl>
+			</div>
+			<div class="postright">
+				<h3>{{ post.topic.name }}</h3>
+				<div class="postmsg">
+					<p class="post_body_html">{{ post.body_html|safe }}</p>
+					{% if not user.is_authenticated or user.forum_profile.show_signatures %}
+						{% if post.user.forum_profile.signature_html %}
+						<div class="postsignature">
+							<br /><br/ >
+							{{ post.user.forum_profile.signature_html|safe }}
+						</div>
+						{% endif %}
+					{% endif %}
+					{% if post.updated %}
+						<p class="postedit"><em>{% trans "Edited" %} {{ post.updated_by.username }} ({% forum_time post.updated %})</em></p>
+					{% endif %}
+					{% with post.attachments.all as attachments %}
+						{% if attachments %}
+							{% for attach in attachments %}
+								<p class="postedit"><em>{% trans "Attachments:" %} <br />{{ attach|attachment_link }}</em></p>
+							{% endfor %}
+						{% endif %}
+					{% endwith %}
+				</div>
+			</div>
+			<div class="clearer"></div>
+			<div class="postfootright">
+				<ul>
+					<li class="postreport"><a href="{% url 'slimbb:misc' %}?action=report&amp;post_id={{ post.id }}">{% trans "Report" %}</a> </li>
+						{% if moderator or post.user|forum_equal_to:user %}
+							<li class="postdelete">| <a onclick="return confirm('{% trans "Are you sure you want to delete this post?" %}')" href="{% url 'slimbb:delete_post' post.id %}">{% trans "Delete" %}</a> </li>
+						{% endif %}
+                    {% if post.markup == 'markdown' %}
+                        {% if moderator or post|forum_posted_by:user %}
+                            <li class="postedit">| <a href="{% url 'slimbb:edit_post' post.id %}">{% trans "Edit" %}</a> </li>
+                    {% endif %}
+                    {% endif %}
+				</ul>
+			</div>
+		</div>
+	</div>
+</div>
+{% endfor %}
+<div class="postlinksb">
+	<div class="inbox">
+		<div class="pagelink conl">{% include 'slimbb/paginator.html' with page=posts_page request=request only %}</div>
+			<ul>
+			    <li><a href="{% url 'slimbb:index' %}">{% trans "Root" %} </a></li>
+			    <li>&raquo; {% link topic.forum %} </li>
+			    <li>
+			        &raquo; {{ topic }}<a href="{% url 'slimbb:forum_topic_feed' topic.id %}"><img src="{{ STATIC_URL }}slimbb/img/feed-icon-small.png" alt="[RSS Feed]" title="[RSS Feed]" class="breadcrumb_rss" /></a>
+			    </li>
+            </ul>
+		{% if user.is_authenticated %}
+			{% if subscribed %}
+				<a class="subscribelink clearb" href="{% url 'slimbb:forum_delete_subscription' topic.id %}?from_topic">{% trans "Unsubscribe" %}</a>
+			{% else %}
+				<a class="subscribelink clearb" href="{% url 'slimbb:forum_add_subscription' topic.id %}">{% trans "Subscribe" %}</a>
+			{% endif %}
+		{% endif %}
+		<div class="clearer"></div>
+	</div>
+</div>
+
+{% if reply_form %}
+    {% with form=reply_form %}
+        {% include "slimbb/includes/post_form.html" %}
+    {% endwith %}
+{% endif %}
+
+{% endblock content%}
+
+{% block controls %}
+<div class="conl">
+	<form id="qjump" method="get" action="forum">
+		<div><label>{% trans "Jump to " %}
+		<br />
+		<select name="id" id="forum_id" onchange="window.location=('{% url 'slimbb:index' %}'+this.options[this.selectedIndex].value)">
+			{% for category in categories %}
+				<optgroup label="{{ category }}">
+					{% for forum in category.forums.all %}
+						<option value="{{ forum.id }}">{{ forum }}</option>
+					{% endfor %}
+				</optgroup>
+			{% endfor %}
+		</select>
+		<input type="button" onclick="window.location=('{% url 'slimbb:index' %}'+getElementById('forum_id').value)" value=" {% trans "Go" %} " accesskey="g" />
+		</label></div>
+	</form>
+	<dl id="modcontrols"><dt><strong>{% trans "Moderator control" %}</strong></dt>
+	{% if moderator %}
+		<dd><a href="{% url 'slimbb:delete_posts' topic.id %}">{% trans "Delete multiple posts" %}</a></dd>
+		<dd><a href="{% url 'slimbb:move_topic' %}?topic_id={{ topic.id }}">{% trans "Move topic" %}</a></dd>
+		{% if topic.closed %}
+			<dd><a href="{% url 'slimbb:open_close_topic' topic.id 'o' %}">{% trans "Open topic" %}</a></dd>
+		{% else %}
+			<dd><a href="{% url 'slimbb:open_close_topic' topic.id 'c' %}">{% trans "Close topic" %}</a></dd>
+		{% endif %}
+		{% if topic.sticky %}
+			<dd><a href="{% url 'slimbb:stick_unstick_topic' topic.id 'u' %}">{% trans "Unstick topic" %}</a></dd></dl>
+		{% else %}
+			<dd><a href="{% url 'slimbb:stick_unstick_topic' topic.id 's' %}">{% trans "Stick topic" %}</a></dd></dl>
+		{% endif %}
+	{% endif %}
+    </dl>
+</div>
+{% endblock %}
