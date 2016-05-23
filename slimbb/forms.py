@@ -197,38 +197,6 @@ class EssentialsProfileForm(forms.ModelForm):
         return self.profile
 
 
-class UserSearchForm(forms.Form):
-    username = forms.CharField(required=False, label=_('Username'))
-    #show_group = forms.ChoiceField(choices=SHOW_GROUP_CHOICES)
-    sort_by = forms.ChoiceField(choices=SORT_USER_BY_CHOICES, label=_('Sort by'))
-    sort_dir = forms.ChoiceField(choices=SORT_DIR_CHOICES, label=_('Sort order'))
-
-    def filter(self, qs):
-        if self.is_valid():
-            username = self.cleaned_data['username']
-            #show_group = self.cleaned_data['show_group']
-            sort_by = self.cleaned_data['sort_by']
-            sort_dir = self.cleaned_data['sort_dir']
-            qs = qs.filter(username__contains=username, forum_profile__post_count__gte=forum_settings.POST_USER_SEARCH)
-            if sort_by == 'username':
-                if sort_dir == 'ASC':
-                    return qs.order_by('username')
-                elif sort_dir == 'DESC':
-                    return qs.order_by('-username')
-            elif sort_by == 'registered':
-                if sort_dir == 'ASC':
-                    return qs.order_by('date_joined')
-                elif sort_dir == 'DESC':
-                    return qs.order_by('-date_joined')
-            elif sort_by == 'num_posts':
-                if sort_dir == 'ASC':
-                    return qs.order_by('forum_profile__post_count')
-                elif sort_dir == 'DESC':
-                    return qs.order_by('-forum_profile__post_count')
-        else:
-            return qs
-
-
 class PostSearchForm(forms.Form):
     keywords = forms.CharField(required=False, label=_('Keyword search'),
                                widget=forms.TextInput(attrs={'size':'40', 'maxlength':'100'}))

@@ -22,8 +22,7 @@ from django.conf import settings
 from haystack.query import SearchQuerySet, SQ
 
 from . import settings as forum_settings
-from .forms import AddPostForm, EditPostForm, UserSearchForm, \
-    PostSearchForm, EssentialsProfileForm, ReportForm
+from .forms import AddPostForm, EditPostForm, PostSearchForm, EssentialsProfileForm, ReportForm
 from .models import Category, Forum, Topic, Post, \
     Attachment, PostTracking
 from .templatetags import forum_extras
@@ -609,16 +608,6 @@ def open_close_topic(request, topic_id, action):
             messages.success(request, _("Topic opened."))
         topic.save()
     return HttpResponseRedirect(topic.get_absolute_url())
-
-
-def users(request):
-    users = User.objects.filter(forum_profile__post_count__gte=forum_settings.POST_USER_SEARCH).order_by('username')
-    form = UserSearchForm(request.GET)
-    users = form.filter(users)
-    return render(request, 'slimbb/users.html', {
-        'users_page': get_page(users, request, forum_settings.USERS_PAGE_SIZE),
-        'form': form,
-    })
 
 
 @login_required

@@ -17,7 +17,6 @@ urlpatterns = [
 
     # User
     url('^user/(?P<username>.*)/$', forum_views.user, name='forum_profile'),
-    url('^users/$', forum_views.users, name='forum_users'),
 
     # Topic
     url('^topic/(?P<topic_id>\d+)/$', forum_views.show_topic, name='topic'),

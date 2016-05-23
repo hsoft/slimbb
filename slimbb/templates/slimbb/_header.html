@@ -15,7 +15,6 @@
             <ul>
             {% block header_menu %}
                 <li id="navindex"><a href="{% url 'slimbb:index' %}">{% trans "Index" %}</a></li>
-                <li id="navuserlist"><a href="{% url 'slimbb:forum_users' %}">{% trans "User list" %}</a></li>
                 <li id="navsearch"><a href="{% url 'slimbb:search' %}">{% trans "Search" %}</a></li>
                 {% if user.is_superuser %}
                     <li id="navadmin"><a href="{% url 'admin:index' %}">{% trans "Administration" %}</a></li>
