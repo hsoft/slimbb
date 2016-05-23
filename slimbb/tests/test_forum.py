@@ -16,7 +16,7 @@ class TestForum(TestCase):
         self.post = Post.objects.get(pk=1)
         self.user = User.objects.get(pk=1)
         self.client = Client()
-        self.client.login(username='slimbb', password='slimbb')
+        self.client.login(username='slimbb', password='djangobb')
 
     def test_index_authericated_view(self):
         response = self.client.get(reverse('slimbb:index'))

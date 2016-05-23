@@ -29,7 +29,7 @@ if not settings.configured and not os.environ.get('DJANGO_SETTINGS_MODULE'):
 
             'haystack',
 
-            'djangobb_forum',
+            'slimbb',
         ),
         MIDDLEWARE_CLASSES=[
                 'django.middleware.common.CommonMiddleware',
@@ -40,7 +40,7 @@ if not settings.configured and not os.environ.get('DJANGO_SETTINGS_MODULE'):
                 'django.middleware.locale.LocaleMiddleware',
                 'django.middleware.locale.LocaleMiddleware',
 
-                'djangobb_forum.middleware.TimezoneMiddleware',
+                'slimbb.middleware.TimezoneMiddleware',
         ],
         TEMPLATES=[{'BACKEND': 'django.template.backends.django.DjangoTemplates',
                   'DIRS': [],
@@ -48,13 +48,13 @@ if not settings.configured and not os.environ.get('DJANGO_SETTINGS_MODULE'):
                   'OPTIONS':
                    {'context_processors':
                     list(global_settings.TEMPLATE_CONTEXT_PROCESSORS) + [
-                        'djangobb_forum.context_processors.forum_settings'],
+                        'slimbb.context_processors.forum_settings'],
                     }
                    }],
         TIME_ZONE = 'Europe/Kiev',
         USE_TZ = True,
         PASSWORD_HASHERS=('django.contrib.auth.hashers.SHA1PasswordHasher',),
-        ROOT_URLCONF='djangobb_forum.tests.urls',
+        ROOT_URLCONF='slimbb.tests.urls',
         DEBUG=False,
         SITE_ID=1,
         HAYSTACK_CONNECTIONS={
@@ -69,7 +69,7 @@ from django.test.runner import DiscoverRunner
 
 def runtests(*test_args, **kwargs):
     if not test_args:
-        test_args = ['djangobb_forum']
+        test_args = ['slimbb']
     parent = dirname(abspath(__file__))
     sys.path.insert(0, parent)
     test_runner = DiscoverRunner(verbosity=kwargs.get('verbosity', 1), interactive=kwargs.get('interactive', False), failfast=kwargs.get('failfast'))

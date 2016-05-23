@@ -3,8 +3,8 @@ from __future__ import unicode_literals
 
 from django.test import TestCase, RequestFactory
 
-from .models import Post
-from .util import urlize, add_rel_nofollow, convert_text_to_html, get_page
+from slimbb.models import Post
+from slimbb.util import urlize, add_rel_nofollow, convert_text_to_html, get_page
 
 
 class TestParsers(TestCase):

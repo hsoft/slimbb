@@ -15,7 +15,7 @@ class TestLinkTags(TestCase):
 
     def test_profile_link(self):
         plink = profile_link(self.user)
-        self.assertEqual(plink, "<a href=\"/forum/user/djangobb/\">djangobb</a>")
+        self.assertEqual(plink, "<a href=\"/forum/user/slimbb/\">slimbb</a>")
 
     def test_link(self):
         l = link(self.post)
