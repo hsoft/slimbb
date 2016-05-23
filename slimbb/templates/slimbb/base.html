@@ -31,14 +31,6 @@
 
     <!-- Highlightjs goodies -->
 	<link type="text/css" rel="stylesheet" href="{{ STATIC_URL }}slimbb/css/pygments.css" />
-	{% if highlight_word %}
-		<script type="text/javascript" src="{{ STATIC_URL }}slimbb/js/jquery.highlight-3.pack.js"></script>
-		<script type="text/javascript">
-			$(document).ready(function(){
-				$("div.postmsg").highlight("{{ highlight_word }}");
-			});
-		</script>
-	{% endif %}
 	{% block extra_meta %}{% endblock %}
 </head>
 <body>

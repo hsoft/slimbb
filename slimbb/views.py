@@ -365,7 +365,6 @@ def show_topic(request, topic_id):
                 **post_form_kwargs
             )
 
-    highlight_word = request.GET.get('hl', '')
     view_data = {
         'categories': Category.objects.all(),
         'topic': topic,
@@ -378,7 +377,6 @@ def show_topic(request, topic_id):
         'back_url': back_url,
         'moderator': moderator,
         'subscribed': subscribed,
-        'highlight_word': highlight_word,
     })
     return render(request, 'slimbb/topic.html', view_data)
 
