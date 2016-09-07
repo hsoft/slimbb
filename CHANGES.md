@@ -1,5 +1,10 @@
 # Release notes
 
+## v0.2.1 - 2016-09-06
+
+* Tweak default style CSS
+* Fix translation compilation
+
 ## v0.2.0 - 2016-05-23
 
 * Begin making templates more overridable

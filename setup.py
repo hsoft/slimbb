@@ -41,7 +41,7 @@ class install_lib(_install_lib):
 
 
 setup(name='slimbb',
-    version='0.2.0',
+    version='0.2.1',
     description='slimbb is a minimal bulletin board (forum) implemented in Django. Forks DjangoBB.',
     license='BSD',
     url='https://github.com/hsoft/slimbb',
