@@ -9,6 +9,7 @@
 *.json
 *.log
 *~
+*.mo
 local_settings.py
 .env
 build/

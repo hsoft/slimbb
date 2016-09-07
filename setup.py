@@ -20,7 +20,7 @@ class compile_translations(Command):
         from django.core.management import execute_from_command_line, CommandError
 
         curdir = os.getcwd()
-        forum_dir = os.path.realpath('djangobb_forum')
+        forum_dir = os.path.realpath('slimbb')
         os.chdir(forum_dir)
         try:
             execute_from_command_line(['django-admin', 'compilemessages'])
